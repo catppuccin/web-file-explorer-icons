@@ -56,8 +56,8 @@ const pullRequestTreeImplementation: ReplacementSelectorSet = {
 	icon: '.ActionList-item-visual svg',
 	isDirectory: (_rowEl, _fileNameEl, iconEl) =>
 		iconEl.getAttribute('aria-label') === 'Directory',
-	isSubmodule: (_rowEl, fileNameEl, _iconEl) =>
-		fileNameEl.getAttribute('aria-label')?.includes('(Submodule)'),
+	isSubmodule: (_rowEl, _fileNameEl, iconEl) =>
+		iconEl.getAttribute('aria-label') === 'Submodule',
 	isCollapsable: (rowEl, fileNameEl, iconEl) =>
 		pullRequestTreeImplementation.isDirectory(rowEl, fileNameEl, iconEl),
 };
