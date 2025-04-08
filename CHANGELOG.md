@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/catppuccin/web-file-explorer-icons/compare/v1.0.0...v1.0.1) (2025-04-08)
+
+
+### Bug Fixes
+
+* **sites/github:** detect submodules in pull request trees ([#194](https://github.com/catppuccin/web-file-explorer-icons/issues/194)) ([e556e7d](https://github.com/catppuccin/web-file-explorer-icons/commit/e556e7d9c54c377a447f2bb53a6ab89e67fe3421))
+
 ## [1.0.0](https://github.com/catppuccin/github-file-explorer-icons/compare/v0.16.0...v1.0.0) (2025-03-24)
 
 
