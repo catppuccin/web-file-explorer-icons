@@ -15,7 +15,7 @@
 		"@humanfs/types": "0.15.0",
 		"@wxt-dev/auto-icons": "1.0.2",
 		"jiti": "2.4.2",
-		"wxt": "0.19.27"
+		"wxt": "0.20.0"
 	},
 	"scripts": {
 		"lint": "biome check .",
