@@ -13,7 +13,7 @@ export type FnWithContext<T> = (
 
 export type ReplacementSelectorSet = {
 	row: string;
-	filename: string;
+	filename: string | symbol;
 	icon: string;
 	isDirectory: FnWithContext<boolean>;
 	isSubmodule: FnWithContext<boolean>;
