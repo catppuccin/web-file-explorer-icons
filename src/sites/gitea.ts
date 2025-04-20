@@ -12,6 +12,30 @@ const mainRepositoryImplementation: ReplacementSelectorSet = {
 	isCollapsable: (_rowEl, _fileNameEl, _iconEl) => false,
 };
 
+const repositorySideTreeImplementation: ReplacementSelectorSet = {
+	row: '.view-file-tree-items .tree-item',
+	filename: '.item-content .gt-ellipsis',
+	icon: '.item-content .svg',
+	isDirectory: (rowEl, _fileNameEl, _iconEl) =>
+		rowEl.classList.contains('type-directory'),
+	isSubmodule: (_rowEl, _fileNameEl, iconEl) =>
+		iconEl.classList.contains('octicon-file-submodule'),
+	isCollapsable: (rowEl, fileNameEl, iconEl) =>
+		repositorySideTreeImplementation.isDirectory(rowEl, fileNameEl, iconEl),
+};
+repositorySideTreeImplementation.styles = /* css */ `
+${repositorySideTreeImplementation.row} {
+	&.type-directory .item-content .svg {
+		display: none !important;
+	}
+
+	.item-toggle:has(svg.octicon-chevron-down) ~ .item-content svg[${ATTRIBUTE_PREFIX}-iconname$='_open'],
+	.item-toggle:has(svg.octicon-chevron-right) ~ .item-content svg[${ATTRIBUTE_PREFIX}]:not([${ATTRIBUTE_PREFIX}-iconname$='_open']) {
+		display: inline-block !important;
+	}
+}
+`.trim();
+
 const diffTreeImplementation: ReplacementSelectorSet = {
 	row: '.diff-file-tree-items .item-directory, .diff-file-tree-items .item-file',
 	filename: '.gt-ellipsis',
@@ -39,5 +63,9 @@ ${diffTreeImplementation.row} {
 
 export const gitea: Site = {
 	domains: ['gitea.com'],
-	replacements: [mainRepositoryImplementation, diffTreeImplementation],
+	replacements: [
+		mainRepositoryImplementation,
+		repositorySideTreeImplementation,
+		diffTreeImplementation,
+	],
 };
