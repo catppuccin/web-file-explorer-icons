@@ -1,5 +1,5 @@
 import type { ReplacementSelectorSet, Site } from '.';
-import { ATTRIBUTE_PREFIX } from '../constants';
+import { ATTRIBUTE_PREFIX, CSS_SELECTOR_SELF } from '../constants';
 
 const mainRepositoryImplementation: ReplacementSelectorSet = {
 	row: '#repo-files-table .repo-file-item',
@@ -9,6 +9,15 @@ const mainRepositoryImplementation: ReplacementSelectorSet = {
 		iconEl.classList.contains('octicon-file-directory-fill'),
 	isSubmodule: (_rowEl, _fileNameEl, iconEl) =>
 		iconEl.classList.contains('octicon-file-submodule'),
+	isCollapsable: (_rowEl, _fileNameEl, _iconEl) => false,
+};
+
+const mainRepositoryParentLinkImplementation: ReplacementSelectorSet = {
+	row: '#repo-files-table .repo-file-line.parent-link',
+	filename: CSS_SELECTOR_SELF,
+	icon: '.svg',
+	isDirectory: (_rowEl, _fileNameEl, _iconEl) => true,
+	isSubmodule: (_rowEl, _fileNameEl, _iconEl) => false,
 	isCollapsable: (_rowEl, _fileNameEl, _iconEl) => false,
 };
 
@@ -65,6 +74,7 @@ export const gitea: Site = {
 	domains: ['gitea.com'],
 	replacements: [
 		mainRepositoryImplementation,
+		mainRepositoryParentLinkImplementation,
 		repositorySideTreeImplementation,
 		diffTreeImplementation,
 	],

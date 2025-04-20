@@ -5,7 +5,7 @@ import { flavor, monochrome, specificFolders } from '@/storage';
 
 import { flavors } from '@catppuccin/palette';
 
-import { ATTRIBUTE_PREFIX } from '@/constants';
+import { ATTRIBUTE_PREFIX, CSS_SELECTOR_SELF } from '@/constants';
 import icons from '@/icons.json';
 import type { ReplacementSelectorSet } from '@/sites';
 
@@ -109,7 +109,12 @@ export async function replaceIconInRow(
 	// Icon already has extension prefix, not necessary to replace again.
 	if (!iconEl || iconEl?.hasAttribute(ATTRIBUTE_PREFIX)) return;
 
-	const fileNameEl = rowEl.querySelector(selectors.filename) as HTMLElement;
+	const fileNameEl =
+		selectors.filename === CSS_SELECTOR_SELF
+			? rowEl
+			: (rowEl.querySelector(
+					selectors.filename as string,
+				) as HTMLElement);
 	if (!fileNameEl) return;
 	const fileName = fileNameEl.textContent
 		?.split('/')
