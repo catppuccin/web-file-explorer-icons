@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://github.com/catppuccin/web-file-explorer-icons/compare/v1.0.1...v1.1.0) (2025-04-20)
+
+
+### Features
+
+* **sites/gitea:** support repository side tree icons ([#197](https://github.com/catppuccin/web-file-explorer-icons/issues/197)) ([7cd6f57](https://github.com/catppuccin/web-file-explorer-icons/commit/7cd6f579025d4eb8543d8ddac4681d9f68b42a33))
+
+
+### Bug Fixes
+
+* **sites/gitea:** replace parent directory link icon ([#199](https://github.com/catppuccin/web-file-explorer-icons/issues/199)) ([7de968b](https://github.com/catppuccin/web-file-explorer-icons/commit/7de968b458bf3b363d2f365da460a9b1d7b426f6))
+
 ## [1.0.1](https://github.com/catppuccin/web-file-explorer-icons/compare/v1.0.0...v1.0.1) (2025-04-08)
 
 
