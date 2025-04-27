@@ -3,33 +3,11 @@ name: Update vscode-icons
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: "0 0 * * *"
 
 jobs:
-  update:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          submodules: 'recursive'
-
-      - name: Update submodule
-        id: submodules
-        uses: sgoudham/update-git-submodules@v2
-        with:
-          submodules: "vscode-icons"
-          strategy: "tag"
-
-      - name: Create pull request
-        uses: peter-evans/create-pull-request@v7
-        if: ${{ steps.submodules.outputs['vscode-icons--updated'] }}
-        with:
-          commit-message: "feat: update catppuccin/vscode-icons to ${{ steps.submodules.outputs['vscode-icons--latestTag'] }}"
-          branch: "feat/update-vscode-icons-${{ steps.submodules.outputs['vscode-icons--latestTag'] }}"
-          title: "feat: update catppuccin/vscode-icons submodule to ${{ steps.submodules.outputs['vscode-icons--latestTag'] }}"
-          body: ${{ steps.submodules.outputs.prBody }}
+  run:
+    uses: catppuccin/actions/.github/workflows/vscode-icons.yml@v1
+    with:
+      path: vscode-icons
+    secrets: inherit
