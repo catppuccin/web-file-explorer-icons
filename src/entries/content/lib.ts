@@ -118,7 +118,7 @@ export async function replaceIconInRow(
 	if (!fileNameEl) return;
 	const fileName = fileNameEl.textContent
 		?.split('/')
-		.at(0)
+		.at(-1)
 		.trim()
 		/* Remove [Unicode LEFT-TO-RIGHT MARK](https://en.wikipedia.org/wiki/Left-to-right_mark) used on GitLab's merge request diff file tree. */
 		.replace(/\u200E/g, '');
