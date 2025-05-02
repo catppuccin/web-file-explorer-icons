@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.0](https://github.com/catppuccin/web-file-explorer-icons/compare/v1.1.0...v1.2.0) (2025-05-02)
+
+
+### Features
+
+* **sites:** release asset/artifact icons ([#204](https://github.com/catppuccin/web-file-explorer-icons/issues/204)) ([2efd154](https://github.com/catppuccin/web-file-explorer-icons/commit/2efd15444910c6342ebf8074cbcbd4802bc655b6))
+
+
+### Bug Fixes
+
+* use basename of directory paths for icon filename ([#201](https://github.com/catppuccin/web-file-explorer-icons/issues/201)) ([1fd9c21](https://github.com/catppuccin/web-file-explorer-icons/commit/1fd9c213e4c36318bd9ba8cc63f21583db84c8d4))
+
 ## [1.1.0](https://github.com/catppuccin/web-file-explorer-icons/compare/v1.0.1...v1.1.0) (2025-04-20)
 
 
