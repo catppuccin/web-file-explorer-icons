@@ -76,6 +76,24 @@ ${pullRequestTreeImplementation.row} {
 }
 	`.trim();
 
+const releaseAssetsImplementation: ReplacementSelectorSet = {
+	row: '#release_page_title + div > section ul li',
+	filename: 'a.Truncate',
+	icon: 'svg.octicon',
+	isDirectory: (_rowEl, _fileNameEl, _iconEl) => false,
+	isSubmodule: (_rowEl, _fileNameEl, _iconEl) => false,
+	isCollapsable: (_rowEl, _fileNameEl, _iconEl) => false,
+	getFilename: (_rowEl, fileNameEl, _iconEl) =>
+		(fileNameEl as HTMLAnchorElement).href,
+};
+releaseAssetsImplementation.styles = /* css */ `
+${releaseAssetsImplementation.row} {
+	svg[${ATTRIBUTE_PREFIX}] {
+		margin-right: 4px;
+	}
+}
+	`.trim();
+
 export const github: Site = {
 	domains: ['github.com'],
 	replacements: [
@@ -83,5 +101,6 @@ export const github: Site = {
 		repositoryMainImplementation,
 		pullRequestTreeImplementation,
 		repositoryMainParentDirectoryImplementation,
+		releaseAssetsImplementation,
 	],
 };

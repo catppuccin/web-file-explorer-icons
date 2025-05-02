@@ -70,6 +70,17 @@ ${diffTreeImplementation.row} {
 }
 `.trim();
 
+const releaseAssetsImplementation: ReplacementSelectorSet = {
+	row: '#release-list .download li',
+	filename: 'a',
+	icon: 'a svg',
+	isDirectory: (_rowEl, _fileNameEl, _iconEl) => false,
+	isSubmodule: (_rowEl, _fileNameEl, _iconEl) => false,
+	isCollapsable: (_rowEl, _fileNameEl, _iconEl) => false,
+	getFilename: (_rowEl, fileNameEl, _iconEl) =>
+		(fileNameEl as HTMLAnchorElement).href,
+};
+
 export const gitea: Site = {
 	domains: ['gitea.com'],
 	replacements: [
@@ -77,5 +88,6 @@ export const gitea: Site = {
 		mainRepositoryParentLinkImplementation,
 		repositorySideTreeImplementation,
 		diffTreeImplementation,
+		releaseAssetsImplementation,
 	],
 };

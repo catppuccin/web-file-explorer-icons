@@ -116,12 +116,15 @@ export async function replaceIconInRow(
 					selectors.filename as string,
 				) as HTMLElement);
 	if (!fileNameEl) return;
-	const fileName = fileNameEl.textContent
-		?.split('/')
-		.at(-1)
-		.trim()
-		/* Remove [Unicode LEFT-TO-RIGHT MARK](https://en.wikipedia.org/wiki/Left-to-right_mark) used on GitLab's merge request diff file tree. */
-		.replace(/\u200E/g, '');
+	const fileName =
+		'getFilename' in selectors
+			? selectors.getFilename(rowEl, fileNameEl, iconEl)
+			: fileNameEl.textContent
+					?.split('/')
+					.at(-1)
+					.trim()
+					/* Remove [Unicode LEFT-TO-RIGHT MARK](https://en.wikipedia.org/wiki/Left-to-right_mark) used on GitLab's merge request diff file tree. */
+					.replace(/\u200E/g, '');
 
 	const fileExtensions: Array<string> = [];
 	// Avoid doing an explosive combination of extensions for very long filenames
