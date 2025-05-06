@@ -1,3 +1,4 @@
+import { ATTRIBUTE_PREFIX } from '../constants';
 import type { ReplacementSelectorSet, Site } from '.';
 
 const mainRepositoryImplementation: ReplacementSelectorSet = {
@@ -10,7 +11,30 @@ const mainRepositoryImplementation: ReplacementSelectorSet = {
 	isCollapsable: (_rowEl, _fileNameEl, _iconEl) => false,
 };
 
+const commitTreeImplementation: ReplacementSelectorSet = {
+	row: '.diff-stat .tree-directory, .diff-stat .tree-file',
+	filename: '.filename',
+	icon: 'svg',
+	isDirectory: (rowEl, _fileNameEl, _iconEl) =>
+		rowEl.classList.contains('tree-directory'),
+	isSubmodule: (_rowEl, _fileNameEl, _iconEl) => false, // TODO: Implement isSubmodule.
+	isCollapsable: (rowEl, fileNameEl, iconEl) =>
+		commitTreeImplementation.isDirectory(rowEl, fileNameEl, iconEl),
+};
+commitTreeImplementation.styles = /* css */ `
+/* Hide directory icons by default. */
+${commitTreeImplementation.row.split(',').at(0)} ${commitTreeImplementation.icon} {
+	display: none;
+}
+
+/* Show relevant extension directory icon depending on open/closed state. */
+details[open] > summary > .tree-directory svg[${ATTRIBUTE_PREFIX}-iconname$='_open'],
+details:not([open]) > summary > .tree-directory svg[${ATTRIBUTE_PREFIX}]:not([${ATTRIBUTE_PREFIX}-iconname$='_open']) {
+	display: inline-block !important;
+}
+	`.trim();
+
 export const tangled: Site = {
 	domains: ['tangled.sh'],
-	replacements: [mainRepositoryImplementation],
+	replacements: [mainRepositoryImplementation, commitTreeImplementation],
 };
