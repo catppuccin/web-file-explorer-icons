@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0](https://github.com/catppuccin/web-file-explorer-icons/compare/v1.2.0...v1.3.0) (2025-05-06)
+
+
+### Features
+
+* **sites/tangled:** support commit diff filetree ([#206](https://github.com/catppuccin/web-file-explorer-icons/issues/206)) ([c4c86fc](https://github.com/catppuccin/web-file-explorer-icons/commit/c4c86fc476da1fb0c64259d001873710dd566549))
+* update catppuccin/vscode-icons to v1.21.0 ([#205](https://github.com/catppuccin/web-file-explorer-icons/issues/205)) ([b949a16](https://github.com/catppuccin/web-file-explorer-icons/commit/b949a16bc69c04a63b53ad1999245c7533d21a89))
+
 ## [1.2.0](https://github.com/catppuccin/web-file-explorer-icons/compare/v1.1.0...v1.2.0) (2025-05-02)
 
 
