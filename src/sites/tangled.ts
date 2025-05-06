@@ -1,5 +1,5 @@
-import { ATTRIBUTE_PREFIX } from '../constants';
 import type { ReplacementSelectorSet, Site } from '.';
+import { ATTRIBUTE_PREFIX } from '../constants';
 
 const mainRepositoryImplementation: ReplacementSelectorSet = {
 	row: '#file-tree > div, .tree > div',
