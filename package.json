@@ -4,7 +4,7 @@
 	"description": "Soothing pastel icons for web file explorers",
 	"license": "MIT",
 	"dependencies": {
-		"@catppuccin/palette": "1.3.0",
+		"@catppuccin/palette": "1.7.1",
 		"selector-observer": "2.1.6",
 		"webext-dynamic-content-scripts": "10.0.4",
 		"webext-permission-toggle": "6.0.1"
