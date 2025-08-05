@@ -1,0 +1,6 @@
+onlyBuiltDependencies:
+  - '@biomejs/biome'
+  - dtrace-provider
+  - esbuild
+  - sharp
+  - spawn-sync
