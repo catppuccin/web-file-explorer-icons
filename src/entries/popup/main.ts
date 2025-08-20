@@ -5,7 +5,7 @@ import type { Associations, Flavor, IconName } from '@/types';
 import { icons } from '@/constants';
 import {
 	customAssociations,
-	flavor,
+	darkFlavor,
 	monochrome,
 	specificFolders,
 } from '@/storage';
@@ -31,12 +31,12 @@ async function init() {
 
 	const flavorEl = document.querySelector('#flavor') as HTMLSelectElement;
 
-	flavorEl.value = await flavor.getValue();
+	flavorEl.value = await darkFlavor.getValue();
 	document.documentElement.setAttribute('theme', flavorEl.value);
 
 	flavorEl.addEventListener('change', async () => {
 		const value = flavorEl.value as Flavor;
-		await flavor.setValue(value);
+		await darkFlavor.setValue(value);
 		document.documentElement.setAttribute('theme', value);
 	});
 

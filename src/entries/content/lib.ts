@@ -1,7 +1,7 @@
 import type { IconName } from '@/types';
 
 import { getAssociations } from '@/associations';
-import { flavor, monochrome, specificFolders } from '@/storage';
+import { darkFlavor, monochrome, specificFolders } from '@/storage';
 
 import { flavors } from '@catppuccin/palette';
 
@@ -13,7 +13,7 @@ export async function injectStyles(stylesEl: Element, siteStyles: string) {
 	stylesEl.textContent =
 		/* css */ `
 	:root {
-	${flavors[await flavor.getValue()].colorEntries
+	${flavors[await darkFlavor.getValue()].colorEntries
 		.map(([name, { hex }]) => `--ctp-${name}: ${hex};`)
 		.join('\n  ')}
 	}
