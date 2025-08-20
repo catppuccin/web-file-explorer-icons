@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/catppuccin/web-file-explorer-icons/compare/v1.4.0...v1.5.0) (2025-08-20)
+
+
+### Features
+
+* update catppuccin/vscode-icons to v1.24.0 ([#218](https://github.com/catppuccin/web-file-explorer-icons/issues/218)) ([62b9dde](https://github.com/catppuccin/web-file-explorer-icons/commit/62b9dde7a40805e4d99c77de1389579ad1352995))
+
 ## [1.4.0](https://github.com/catppuccin/web-file-explorer-icons/compare/v1.3.0...v1.4.0) (2025-08-04)
 
 
