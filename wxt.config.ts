@@ -76,7 +76,7 @@ export default defineConfig({
 		},
 	},
 	modules: ['@wxt-dev/auto-icons'],
-	runner: {
+	webExt: {
 		startUrls: [
 			'https://github.com/catppuccin/catppuccin',
 			'https://gitlab.com/gitlab-org/gitlab',
