@@ -17,6 +17,11 @@
 		"jiti": "2.4.2",
 		"wxt": "0.20.8"
 	},
+	"pnpm": {
+		"overrides": {
+			"vite": "6.3.5"
+		}
+	},
 	"scripts": {
 		"lint": "biome check .",
 		"format": "biome format --write .",
