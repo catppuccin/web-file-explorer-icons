@@ -35,6 +35,16 @@ async function createIconElement(
 		temp.innerHTML = icons[iconName];
 	}
 	const svg = temp.firstElementChild as SVGSVGElement;
+
+	/* 
+		We need to copy all classes to the svg to avoid React adding another icon
+		as this icon is not recognised as the same icon.
+		https://github.com/catppuccin/web-file-explorer-icons/issues/156
+	*/
+	if (originalIconEl.classList.length > 0) {
+		svg.classList.add(...originalIconEl.classList);
+	}
+
 	svg.setAttribute(ATTRIBUTE_PREFIX, '');
 	svg.setAttribute(`${ATTRIBUTE_PREFIX}-iconname`, iconName);
 	svg.setAttribute(`${ATTRIBUTE_PREFIX}-filename`, fileName);
