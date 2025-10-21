@@ -84,7 +84,7 @@ export default defineConfig({
 			'https://gitea.com/gitea/gitea-mirror',
 			'https://gitea.catppuccin.com/catppuccin/catppuccin',
 			'https://bitbucket.org/atlassian/atlassian-frontend-mirror',
-			'https://tangled.sh/@tangled.sh/core',
+			'https://tangled.org/@tangled.org/core',
 		],
 	},
 });

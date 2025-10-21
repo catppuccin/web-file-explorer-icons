@@ -35,6 +35,6 @@ details:not([open]) > summary > .tree-directory svg[${ATTRIBUTE_PREFIX}]:not([${
 	`.trim();
 
 export const tangled: Site = {
-	domains: ['tangled.sh'],
+	domains: ['tangled.org'],
 	replacements: [mainRepositoryImplementation, commitTreeImplementation],
 };
