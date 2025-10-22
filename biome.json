@@ -15,7 +15,29 @@
 		"lineWidth": 80,
 		"includes": ["**", "!**/pnpm-lock.yaml"]
 	},
-	"assist": { "actions": { "source": { "organizeImports": "on" } } },
+	"assist": {
+		"actions": {
+			"source": {
+				"organizeImports": {
+					"level": "on",
+					"options": {
+						"groups": [
+							["wxt", "#imports"],
+							":BLANK_LINE:",
+							{ "type": true },
+							":BLANK_LINE:",
+							["@/**", "!@/*.json"],
+							":PATH:",
+							":BLANK_LINE:",
+							["@catppuccin/*"],
+							":BLANK_LINE:",
+							["*.json"]
+						]
+					}
+				}
+			}
+		}
+	},
 	"linter": {
 		"enabled": true,
 		"rules": {
@@ -35,7 +57,13 @@
 				},
 				"useForOf": "error",
 				"noUselessElse": "error",
-				"useArrayLiterals": "error"
+				"useArrayLiterals": "error",
+				"useImportType": {
+					"level": "error",
+					"options": {
+						"style": "separatedType"
+					}
+				}
 			},
 			"suspicious": {
 				"useAwait": "error",
