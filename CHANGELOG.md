@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.6.0](https://github.com/catppuccin/web-file-explorer-icons/compare/v1.5.0...v1.6.0) (2025-10-22)
+
+
+### Features
+
+* update catppuccin/vscode-icons to v1.26.0 ([#224](https://github.com/catppuccin/web-file-explorer-icons/issues/224)) ([042e0ca](https://github.com/catppuccin/web-file-explorer-icons/commit/042e0caa45062932247ffdcf8f242c49550ebb5f))
+
+
+### Bug Fixes
+
+* **sites/tangled:** update domain to tangled.org ([#228](https://github.com/catppuccin/web-file-explorer-icons/issues/228)) ([041d1e3](https://github.com/catppuccin/web-file-explorer-icons/commit/041d1e3c7afacb0eedaf1c5d698b4549cb575d37))
+
 ## [1.5.0](https://github.com/catppuccin/web-file-explorer-icons/compare/v1.4.0...v1.5.0) (2025-08-20)
 
 
