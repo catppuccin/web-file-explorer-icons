@@ -34,5 +34,5 @@
 		"postinstall": "wxt prepare"
 	},
 	"type": "module",
-	"packageManager": "pnpm@10.15.1"
+	"packageManager": "pnpm@10.19.0"
 }
