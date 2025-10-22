@@ -19,7 +19,7 @@
 	},
 	"pnpm": {
 		"overrides": {
-			"vite": "6.3.5"
+			"vite": "6.4.1"
 		}
 	},
 	"scripts": {
