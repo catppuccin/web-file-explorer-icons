@@ -13,7 +13,7 @@
 		"@biomejs/biome": "1.9.4",
 		"@humanfs/node": "0.16.6",
 		"@humanfs/types": "0.15.0",
-		"@wxt-dev/auto-icons": "1.0.2",
+		"@wxt-dev/auto-icons": "1.1.0",
 		"jiti": "2.4.2",
 		"wxt": "0.20.11"
 	},
