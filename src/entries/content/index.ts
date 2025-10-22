@@ -3,7 +3,7 @@ import { defineContentScript } from '#imports';
 import { observe } from 'selector-observer';
 
 import { type ReplacementSelectorSet, matches, sites } from '@/sites';
-import { flavor } from '@/storage';
+import { darkFlavor } from '@/storage';
 import { createStylesElement } from '@/utils';
 import { injectStyles, replaceIconInRow } from './lib';
 
@@ -43,6 +43,6 @@ function runReplacements(
 	}
 
 	const rawStyles = replacements.map(({ styles }) => styles || '').join('\n');
-	flavor.watch(() => injectStyles(stylesEl, rawStyles));
+	darkFlavor.watch(() => injectStyles(stylesEl, rawStyles));
 	injectStyles(stylesEl, rawStyles);
 }
