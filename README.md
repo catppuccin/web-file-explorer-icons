@@ -100,8 +100,15 @@ This extension aims to provide the same configuration options as [catppuccin/vsc
 
 ## 🙋 FAQ
 
-- Q: **_"How can I enable this extension on a custom domain?"_**\
+- Q: **_"How can I enable this extension on a custom domain?"_**  
   A: See [fregante.github.io/webext-permission-toggle](https://fregante.github.io/webext-permission-toggle/?name=Catppuccin+for+Web+File+Explorer+Icons&icon=https://raw.githubusercontent.com/catppuccin/web-file-explorer-icons/main/src/assets/icon.png).
+
+- Q: **_"Where can I learn more about Catppuccin themes?"_**  
+  A: Visit the [official Catppuccin documentation](https://catppuccin.com/).
+
+- Q: **_"Where do I report bugs or suggest new icons?"_**  
+  A: Open an issue on [GitHub Issues](https://github.com/catppuccin/web-file-explorer-icons/issues).
+
 
 ## Contributing
 
