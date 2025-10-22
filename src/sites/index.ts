@@ -17,6 +17,7 @@ export type ReplacementSelectorSet = {
 	icon: string;
 	isDirectory: FnWithContext<boolean>;
 	isSubmodule: FnWithContext<boolean>;
+	isSymlink?: FnWithContext<boolean>;
 	isCollapsable: FnWithContext<boolean>;
 	getFilename?: FnWithContext<string>;
 	styles?: string;

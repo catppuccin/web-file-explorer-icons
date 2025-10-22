@@ -12,6 +12,7 @@ const repositorySideTreeImplementation: ReplacementSelectorSet = {
 		iconEl.getAttribute('class')?.includes('octicon-file-directory-'),
 	isSubmodule: (_rowEl, _fileNameEl, iconEl) =>
 		iconEl.classList.contains('octicon-file-submodule'),
+	isSymlink: (_rowEl, _fileNameEl, _iconEl) => false, // No way to tell, GitHub themselves don't show a different icon here.
 	isCollapsable: (rowEl, fileNameEl, iconEl) =>
 		repositorySideTreeImplementation.isDirectory(rowEl, fileNameEl, iconEl),
 };
@@ -36,9 +37,18 @@ const repositoryMainImplementation: ReplacementSelectorSet = {
 	filename: '.react-directory-filename-cell a',
 	icon: 'svg',
 	isDirectory: (_rowEl, _fileNameEl, iconEl) =>
-		iconEl.classList.contains('icon-directory'),
+		iconEl.classList.contains('icon-directory') &&
+		!iconEl.classList.contains('octicon-file-symlink-file'),
 	isSubmodule: (_rowEl, fileNameEl, _iconEl) =>
 		fileNameEl.getAttribute('aria-label')?.includes('(Submodule)'),
+	isSymlink: (_rowEl, fileNameEl, _iconEl) => {
+		const ariaLabel = fileNameEl.getAttribute('aria-label');
+
+		return (
+			ariaLabel?.endsWith('(Symlink to file)') ||
+			ariaLabel?.endsWith('(Symlink to directory)')
+		);
+	},
 	isCollapsable: (_rowEl, _fileNameEl, _iconEl) => false,
 };
 
@@ -48,6 +58,7 @@ const repositoryMainParentDirectoryImplementation: ReplacementSelectorSet = {
 	icon: 'svg',
 	isDirectory: (_rowEl, _fileNameEl, _iconEl) => true,
 	isSubmodule: (_rowEl, _fileNameEl, _iconEl) => false,
+	isSymlink: (_rowEl, _fileNameEl, _iconEl) => false,
 	isCollapsable: (_rowEl, _fileNameEl, _iconEl) => false,
 };
 
@@ -59,6 +70,8 @@ const pullRequestTreeImplementation: ReplacementSelectorSet = {
 		iconEl.getAttribute('aria-label') === 'Directory',
 	isSubmodule: (_rowEl, _fileNameEl, iconEl) =>
 		iconEl.getAttribute('aria-label') === 'Submodule',
+	isSymlink: (_rowEl, _fileNameEl, iconEl) =>
+		iconEl.getAttribute('aria-label') === 'Symlink Directory', // Symlinked files also have the 'Symlink Directory' aria-label, and it is not possible to distinguish symlinked files vs folders in this view.
 	isCollapsable: (rowEl, fileNameEl, iconEl) =>
 		pullRequestTreeImplementation.isDirectory(rowEl, fileNameEl, iconEl),
 };
@@ -83,6 +96,7 @@ const releaseAssetsImplementation: ReplacementSelectorSet = {
 	icon: 'svg.octicon',
 	isDirectory: (_rowEl, _fileNameEl, _iconEl) => false,
 	isSubmodule: (_rowEl, _fileNameEl, _iconEl) => false,
+	isSymlink: (_rowEl, _fileNameEl, _iconEl) => false,
 	isCollapsable: (_rowEl, _fileNameEl, _iconEl) => false,
 	getFilename: (_rowEl, fileNameEl, _iconEl) =>
 		(fileNameEl as HTMLAnchorElement).href,
