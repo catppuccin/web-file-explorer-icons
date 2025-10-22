@@ -1,11 +1,10 @@
 import { defineConfig } from 'wxt';
 
+import { matches } from './src/sites';
+
 import { join } from 'node:path';
 import { hfs } from '@humanfs/node';
-
 import jiti from 'jiti';
-
-import { matches } from './src/sites';
 
 export default defineConfig({
 	srcDir: 'src',

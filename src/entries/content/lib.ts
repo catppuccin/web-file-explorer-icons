@@ -1,13 +1,13 @@
+import type { ReplacementSelectorSet } from '@/sites';
 import type { IconName } from '@/types';
 
 import { getAssociations } from '@/associations';
+import { ATTRIBUTE_PREFIX, CSS_SELECTOR_SELF } from '@/constants';
 import { flavor, monochrome, specificFolders } from '@/storage';
 
 import { flavors } from '@catppuccin/palette';
 
-import { ATTRIBUTE_PREFIX, CSS_SELECTOR_SELF } from '@/constants';
 import icons from '@/icons.json';
-import type { ReplacementSelectorSet } from '@/sites';
 
 export async function injectStyles(stylesEl: Element, siteStyles: string) {
 	stylesEl.textContent =
