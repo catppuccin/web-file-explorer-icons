@@ -1,29 +1,50 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.9.2/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.0.6/schema.json",
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",
 		"useIgnoreFile": true
 	},
 	"files": {
-		"ignore": ["vscode-icons/**"]
+		"includes": ["**", "!**/vscode-icons/**"]
 	},
 	"formatter": {
 		"enabled": true,
 		"formatWithErrors": false,
 		"useEditorconfig": true,
 		"lineWidth": 80,
-		"ignore": ["pnpm-lock.yaml"]
+		"includes": ["**", "!**/pnpm-lock.yaml"]
 	},
-	"organizeImports": { "enabled": true },
+	"assist": {
+		"actions": {
+			"source": {
+				"organizeImports": {
+					"level": "on",
+					"options": {
+						"groups": [
+							["wxt", "#imports"],
+							":BLANK_LINE:",
+							{ "type": true },
+							":BLANK_LINE:",
+							["@/**", "!@/*.json"],
+							":PATH:",
+							":BLANK_LINE:",
+							["@catppuccin/*"],
+							":BLANK_LINE:",
+							["*.json"]
+						]
+					}
+				}
+			}
+		}
+	},
 	"linter": {
 		"enabled": true,
 		"rules": {
 			"recommended": true,
 			"correctness": {
 				"noUnusedImports": "warn",
-				"noUnusedVariables": "warn",
-				"useArrayLiterals": "error"
+				"noUnusedVariables": "warn"
 			},
 			"style": {
 				"noNegationElse": "error",
@@ -34,7 +55,15 @@
 						"syntax": "generic"
 					}
 				},
-				"useForOf": "error"
+				"useForOf": "error",
+				"noUselessElse": "error",
+				"useArrayLiterals": "error",
+				"useImportType": {
+					"level": "error",
+					"options": {
+						"style": "separatedType"
+					}
+				}
 			},
 			"suspicious": {
 				"useAwait": "error",
@@ -65,7 +94,7 @@
 	},
 	"overrides": [
 		{
-			"include": ["**/*.{yml,yaml,md}"],
+			"includes": ["**/*.{yml,yaml,md}"],
 			"formatter": { "indentStyle": "space", "indentWidth": 2 }
 		}
 	]

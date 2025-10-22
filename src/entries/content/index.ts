@@ -1,11 +1,13 @@
 import { defineContentScript } from '#imports';
 
-import { observe } from 'selector-observer';
+import type { ReplacementSelectorSet } from '@/sites';
 
-import { type ReplacementSelectorSet, matches, sites } from '@/sites';
+import { matches, sites } from '@/sites';
 import { flavor } from '@/storage';
 import { createStylesElement } from '@/utils';
 import { injectStyles, replaceIconInRow } from './lib';
+
+import { observe } from 'selector-observer';
 
 export default defineContentScript({
 	// Make sure `matches` URLs are updated in wxt.config.ts as well.

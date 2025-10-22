@@ -1,4 +1,5 @@
 import type { ReplacementSelectorSet, Site } from '.';
+
 import { ATTRIBUTE_PREFIX, CSS_SELECTOR_SELF } from '../constants';
 
 const mainRepositoryImplementation: ReplacementSelectorSet = {
