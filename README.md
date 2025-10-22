@@ -47,7 +47,7 @@ Applies Catppuccin-themed code/file icons to file explorers on the following sit
 - [Gitea](https://gitea.com)
 - [Forgejo](https://forgejo.org)
 - [Bitbucket](https://bitbucket.org)
-- [tangled.sh](https://tangled.sh)
+- [Tangled](https://tangled.org)
 
 ## Usage
 
