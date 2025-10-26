@@ -65,6 +65,7 @@ async function findIconMatch(
 	fileName: string,
 	fileExtensions: Array<string>,
 	isSubmodule: boolean,
+	isSymlink: boolean,
 	isDirectory: boolean,
 ): Promise<IconName> {
 	// Special parent directory folder icon.
@@ -74,6 +75,7 @@ async function findIconMatch(
 	const useSpecificFolders = await specificFolders.getValue();
 
 	if (useSpecificFolders && isSubmodule) return 'folder_git';
+	if (isSymlink) return isDirectory ? 'folder_symlink' : 'symlink';
 
 	if (isDirectory) {
 		if (useSpecificFolders) {
@@ -139,12 +141,17 @@ export async function replaceIconInRow(
 
 	const isDirectory = selectors.isDirectory(rowEl, fileNameEl, iconEl);
 	const isSubmodule = selectors.isSubmodule(rowEl, fileNameEl, iconEl);
+	const isSymlink =
+		'isSymlink' in selectors
+			? selectors.isSymlink(rowEl, fileNameEl, iconEl)
+			: false;
 	const isCollapsable = selectors.isCollapsable(rowEl, fileNameEl, iconEl);
 
 	const iconName = await findIconMatch(
 		fileName,
 		fileExtensions,
 		isSubmodule,
+		isSymlink,
 		isDirectory,
 	);
 
