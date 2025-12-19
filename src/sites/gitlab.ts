@@ -37,7 +37,7 @@ const commitDiffFileHeaderImplementation: ReplacementSelectorSet = {
 const mergeRequestsTreeImplementation: ReplacementSelectorSet = {
 	row: '.diff-tree-list .file-row',
 	filename: '.file-row-name',
-	icon: '.file-row-icon svg',
+	icon: '.file-row-name svg',
 	isDirectory: (rowEl, _fileNameEl, _iconEl) =>
 		rowEl.classList.contains('folder'),
 	isSubmodule: (_rowEl, _fileNameEl, iconEl) =>
