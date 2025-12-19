@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.1](https://github.com/catppuccin/web-file-explorer-icons/compare/v1.6.0...v1.6.1) (2025-12-19)
+
+
+### Bug Fixes
+
+* **sites/gitlab:** merge request diff tree icons ([#242](https://github.com/catppuccin/web-file-explorer-icons/issues/242)) ([16d7808](https://github.com/catppuccin/web-file-explorer-icons/commit/16d7808918339d74a34347c2d53a04e2f017be04))
+
 ## [1.6.0](https://github.com/catppuccin/web-file-explorer-icons/compare/v1.5.0...v1.6.0) (2025-10-22)
 
 
