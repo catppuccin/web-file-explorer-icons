@@ -22,6 +22,12 @@ body:
       description: E.g. Google Chrome, Firefox, Microsoft Edge, Safari, Arc...
     validations:
       required: true
+  - type: input
+    attributes:
+      label: What URL can this issue be reproduced on?
+      description: E.g. https://github.com/foo/bar
+    validations:
+      required: true
   - type: textarea
     attributes:
       label: What issue are you experiencing?
