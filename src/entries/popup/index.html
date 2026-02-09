@@ -6,38 +6,7 @@
 		<title>Catppuccin for Web File Explorer Icons</title>
 	</head>
 	<body>
-		<section>
-			<label for="flavor">Flavor</label>
-			<select id="flavor">
-				<option value="latte">Latte</option>
-				<option value="frappe">Frappé</option>
-				<option value="macchiato">Macchiato</option>
-				<option value="mocha">Mocha</option>
-			</select>
-		</section>
-		<section class="associations">
-			<label>Associations</label>
-			<div>
-				<span>File extensions</span>
-				<ul id="associations-file-extensions"></ul>
-			</div>
-			<div>
-				<span>File names</span>
-				<ul id="associations-file-names"></ul>
-			</div>
-			<div>
-				<span>Folder names</span>
-				<ul id="associations-folder-names"></ul>
-			</div>
-		</section>
-		<section>
-			<label for="specificFolders">Specific folders</label>
-			<input id="specificFolders" type="checkbox" />
-		</section>
-		<section>
-			<label for="monochrome">Monochrome</label>
-			<input id="monochrome" type="checkbox" />
-		</section>
+		<div id="app"></div>
+		<script type="module" src="./main.tsx"></script>
 	</body>
-	<script type="module" src="./main.ts"></script>
 </html>

@@ -110,11 +110,16 @@ button {
 	cursor: pointer;
 }
 
-button.delete {
+button.btn-delete {
 	color: var(--ctp-red);
 }
 
-button.delete svg {
+button.btn-add {
+	color: var(--ctp-green);
+}
+
+button.btn-delete svg,
+button.btn-add svg {
 	width: 1.5em;
 	height: 1.5em;
 }

@@ -74,7 +74,7 @@ export default defineConfig({
 			}
 		},
 	},
-	modules: ['@wxt-dev/auto-icons'],
+	modules: ['@wxt-dev/auto-icons', '@wxt-dev/module-solid'],
 	webExt: {
 		startUrls: [
 			'https://github.com/catppuccin/catppuccin',
