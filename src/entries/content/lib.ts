@@ -106,8 +106,7 @@ export async function replaceIconInRow(
 	selectors: ReplacementSelectorSet,
 ) {
 	const iconEl = rowEl.querySelector(selectors.icon) as HTMLElement;
-	// Icon already has extension prefix, not necessary to replace again.
-	if (!iconEl || iconEl?.hasAttribute(ATTRIBUTE_PREFIX)) return;
+	if (!iconEl) return;
 
 	const fileNameEl =
 		selectors.filename === CSS_SELECTOR_SELF
@@ -153,7 +152,7 @@ export async function replaceIconInRow(
 	// Check if element sibling before current element was inserted by extension, replace the old replacement with the new one instead.
 	const prevEl = iconEl.previousElementSibling;
 	if (prevEl?.hasAttribute(ATTRIBUTE_PREFIX)) {
-		replacementEl.replaceWith(prevEl);
+		prevEl.replaceWith(replacementEl);
 	}
 	// If the current icon element is an icon from this extension, replace it with the new icon.
 	else if (iconEl.hasAttribute(ATTRIBUTE_PREFIX)) {
