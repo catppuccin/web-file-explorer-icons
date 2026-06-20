@@ -44,6 +44,7 @@ async function createIconElement(
 			!(
 				attribute.startsWith(ATTRIBUTE_PREFIX) ||
 				[
+					'style', // let's not copy our manual `display: none`
 					'viewBox',
 					'stroke-width',
 					'stroke-linecap',
