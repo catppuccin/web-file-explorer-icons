@@ -174,6 +174,11 @@ export async function replaceIconInRow(
 			iconEl,
 		);
 
+		const prevEl = replacementEl.previousElementSibling;
+		if (prevEl?.hasAttribute(ATTRIBUTE_PREFIX)) {
+			prevEl.remove();
+		}
+
 		replacementEl.after(companionEl);
 	}
 }
