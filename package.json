@@ -6,7 +6,7 @@
 	"dependencies": {
 		"@catppuccin/palette": "1.3.0",
 		"selector-observer": "2.1.6",
-		"webext-dynamic-content-scripts": "10.0.4",
+		"webext-dynamic-content-scripts": "10.0.5",
 		"webext-permission-toggle": "6.0.1"
 	},
 	"devDependencies": {
