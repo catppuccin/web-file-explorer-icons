@@ -54,6 +54,8 @@ const mergeRequestsTreeImplementation: ReplacementSelectorSet = {
 
 export const gitlab: Site = {
 	domains: ['gitlab.com'],
+	dark: '.gl-dark',
+	system: '.gl-system',
 	replacements: [
 		repositoryMainImplementation,
 		repositorySideTreeImplementation,

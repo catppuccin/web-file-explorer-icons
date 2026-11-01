@@ -1,6 +1,6 @@
 import { defineContentScript } from '#imports';
 
-import type { ReplacementSelectorSet } from '@/sites';
+import type { Site } from '@/sites';
 
 import { matches, sites } from '@/sites';
 import { createStylesElement } from '@/utils';
@@ -20,23 +20,26 @@ export default defineContentScript({
 	async main() {
 		for (const site of sites) {
 			if (site.domains.includes(window.location.hostname)) {
-				await runReplacements(site.replacements);
+				await runReplacements(site);
 				// Assume URLs only have one matching site implementation. Can change this in the future.
 				return;
 			}
 		}
 
-		/* No matching domain. */
-		const replacements = sites.flatMap((site) => site.replacements);
-		await runReplacements(replacements);
+		/* No matching domain, so run every site's replacements and follow the system color scheme. */
+		await runReplacements({
+			domains: [],
+			replacements: sites.flatMap((site) => site.replacements),
+		});
 	},
 });
 
-async function runReplacements(replacements: Array<ReplacementSelectorSet>) {
+async function runReplacements({ replacements, dark, system }: Site) {
 	createStylesElement('catppuccin-file-explorer-icons').textContent =
 		createReplacementStyles(replacements);
 	await injectIconStyles(
 		createStylesElement('catppuccin-file-explorer-icons-icons'),
+		{ dark, system },
 	);
 
 	for (const replacement of replacements) {

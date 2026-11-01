@@ -40,6 +40,8 @@ ${fileContentsHeaderImplementation.row}[${ATTRIBUTE_PREFIX}] > div:first-child s
 
 export const bitbucket: Site = {
 	domains: ['bitbucket.org'],
+	// Resolved to `light` or `dark`, even when following the system color scheme.
+	dark: '[data-color-mode="dark"]',
 	replacements: [
 		mainRepositoryImplementation,
 		fileContentsHeaderImplementation,

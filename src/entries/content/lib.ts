@@ -1,9 +1,15 @@
-import type { ReplacementSelectorSet } from '@/sites';
-import type { Flavor, IconName } from '@/types';
+import type { ReplacementSelectorSet, Site } from '@/sites';
+import type { Flavor, FlavorSetting, IconName } from '@/types';
 
 import { getAssociations } from '@/associations';
 import { ATTRIBUTE_PREFIX, CSS_SELECTOR_SELF } from '@/constants';
-import { flavor, monochrome, specificFolders } from '@/storage';
+import {
+	darkFlavor,
+	flavor,
+	lightFlavor,
+	monochrome,
+	specificFolders,
+} from '@/storage';
 
 import { flavors } from '@catppuccin/palette';
 
@@ -63,12 +69,15 @@ ${openIcon} {
 
 const usedIcons = new Set<IconName>();
 let iconStylesEl: HTMLStyleElement;
-let currentFlavor: Flavor;
+let siteTheme: Pick<Site, 'dark' | 'system'>;
+let currentFlavor: FlavorSetting;
+let currentLightFlavor: Flavor;
+let currentDarkFlavor: Flavor;
 let isMonochrome: boolean;
 
-/** Create a CSS `url()` of the icon as an SVG data URL, with the current flavor's colors inserted in. */
-function createIconDataUrl(iconName: IconName): string {
-	const { colors } = flavors[currentFlavor];
+/** Create a CSS `url()` of the icon as an SVG data URL, with the flavor's colors inserted in. */
+function createIconDataUrl(iconName: IconName, flavor: Flavor): string {
+	const { colors } = flavors[flavor];
 	const svg = icons[iconName].replaceAll(
 		/var\(--ctp-(\w+)\)/g,
 		(_, color: keyof typeof colors) =>
@@ -77,31 +86,64 @@ function createIconDataUrl(iconName: IconName): string {
 	return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 }
 
-/** Create the rule defining the icon (and its open variant, if any) for rows tagged with it. */
-function createIconStyleRule(iconName: IconName): string {
+/** Create the declarations defining the icon (and its open variant, if any) in the flavor. */
+function createIconDeclarations(iconName: IconName, flavor: Flavor): string {
 	const openIconName = `${iconName}_open` as IconName;
-	const openIconExists = openIconName in icons;
-	const openIconDecl = openIconExists
-		? `${OPEN_ICON_PROPERTY}: ${createIconDataUrl(openIconName)};`
-		: '';
-	return `[${ATTRIBUTE_PREFIX}="${iconName}"] { ${ICON_PROPERTY}: ${createIconDataUrl(iconName)}; ${openIconDecl} }`;
+	const openIconDecl =
+		openIconName in icons
+			? `${OPEN_ICON_PROPERTY}: ${createIconDataUrl(openIconName, flavor)};`
+			: '';
+	return `${ICON_PROPERTY}: ${createIconDataUrl(iconName, flavor)}; ${openIconDecl}`;
+}
+
+/** Create the style rules for replacing an icon, using the appropriate flavor. */
+function createIconStyleRules(iconName: IconName): Array<string> {
+	const selector = `[${ATTRIBUTE_PREFIX}="${iconName}"]`;
+	if (currentFlavor !== 'auto')
+		return [
+			`${selector} { ${createIconDeclarations(iconName, currentFlavor)} }`,
+		];
+
+	const dark = createIconDeclarations(iconName, currentDarkFlavor);
+	// Sites that do not say how they choose a color scheme are assumed to follow the system theme.
+	const system = siteTheme.dark || siteTheme.system ? siteTheme.system : '*';
+	return [
+		`${selector} { ${createIconDeclarations(iconName, currentLightFlavor)} }`,
+		siteTheme.dark && `:root:is(${siteTheme.dark}) ${selector} { ${dark} }`,
+		system &&
+			`@media (prefers-color-scheme: dark) { :root:is(${system}) ${selector} { ${dark} } }`,
+	].filter(Boolean);
 }
 
 /** Regenerate the rules for every icon used so far, e.g. after the flavor changes. */
 function renderIconStyles() {
 	iconStylesEl.textContent = [...usedIcons]
-		.map(createIconStyleRule)
+		.flatMap(createIconStyleRules)
 		.join('\n');
 }
 
-/** Set the element icon rules are written to, and keep them in sync with the flavor and monochrome settings. */
-export async function injectIconStyles(stylesEl: HTMLStyleElement) {
+/** Set the element icon rules are written to and how the site chooses its color scheme, and keep the rules in sync with the flavor and monochrome settings. */
+export async function injectIconStyles(
+	stylesEl: HTMLStyleElement,
+	theme: Pick<Site, 'dark' | 'system'>,
+) {
 	iconStylesEl = stylesEl;
+	siteTheme = theme;
 	currentFlavor = await flavor.getValue();
+	currentLightFlavor = await lightFlavor.getValue();
+	currentDarkFlavor = await darkFlavor.getValue();
 	isMonochrome = await monochrome.getValue();
 
 	flavor.watch((value) => {
 		currentFlavor = value;
+		renderIconStyles();
+	});
+	lightFlavor.watch((value) => {
+		currentLightFlavor = value;
+		renderIconStyles();
+	});
+	darkFlavor.watch((value) => {
+		currentDarkFlavor = value;
 		renderIconStyles();
 	});
 	monochrome.watch((value) => {
@@ -110,16 +152,20 @@ export async function injectIconStyles(stylesEl: HTMLStyleElement) {
 	});
 }
 
-/** Define the icon's rule if it has not been used before. */
+/** Define the icon's rules if it has not been used before. */
 function useIcon(iconName: IconName) {
 	if (usedIcons.has(iconName)) return;
 	usedIcons.add(iconName);
 
-	const rule = createIconStyleRule(iconName);
-	if (iconStylesEl.sheet) {
-		iconStylesEl.sheet.insertRule(rule, iconStylesEl.sheet.cssRules.length);
-	} else {
-		iconStylesEl.textContent += `\n${rule}`;
+	for (const rule of createIconStyleRules(iconName)) {
+		if (iconStylesEl.sheet) {
+			iconStylesEl.sheet.insertRule(
+				rule,
+				iconStylesEl.sheet.cssRules.length,
+			);
+		} else {
+			iconStylesEl.textContent += `\n${rule}`;
+		}
 	}
 }
 

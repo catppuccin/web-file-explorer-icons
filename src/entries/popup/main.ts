@@ -5,7 +5,9 @@ import type { Associations, Flavor, IconName } from '@/types';
 import { icons } from '@/constants';
 import {
 	customAssociations,
+	darkFlavor,
 	flavor,
+	lightFlavor,
 	monochrome,
 	specificFolders,
 } from '@/storage';
@@ -13,7 +15,7 @@ import { createStylesElement } from '@/utils';
 
 import { flavorEntries } from '@catppuccin/palette';
 
-function injectStyles() {
+function injectPaletteVariablesAsStyles() {
 	const styles = createStylesElement('catppuccin-icons-css-variables');
 
 	styles.textContent = flavorEntries
@@ -27,18 +29,43 @@ function injectStyles() {
 }
 
 async function init() {
-	injectStyles();
+	injectPaletteVariablesAsStyles();
 
-	const flavorEl = document.querySelector('#flavor') as HTMLSelectElement;
+	const darkScheme = window.matchMedia('(prefers-color-scheme: dark)');
 
-	flavorEl.value = await flavor.getValue();
-	document.documentElement.setAttribute('theme', flavorEl.value);
+	// Theme the popup with the selected flavor, or with the light or dark flavor matching the system color scheme if automatic.
+	async function applyTheme() {
+		const value = await flavor.getValue();
+		document.documentElement.setAttribute(
+			'theme',
+			value === 'auto'
+				? await (darkScheme.matches
+						? darkFlavor
+						: lightFlavor
+					).getValue()
+				: value,
+		);
+		for (const el of document.querySelectorAll<HTMLElement>(
+			'.automatic-flavor',
+		))
+			el.hidden = value !== 'auto';
+	}
 
-	flavorEl.addEventListener('change', async () => {
-		const value = flavorEl.value as Flavor;
-		await flavor.setValue(value);
-		document.documentElement.setAttribute('theme', value);
-	});
+	for (const [selector, storage] of Object.entries({
+		flavor: flavor,
+		lightFlavor: lightFlavor,
+		darkFlavor: darkFlavor,
+	})) {
+		const el = document.querySelector(`#${selector}`) as HTMLSelectElement;
+		el.value = await storage.getValue();
+		el.addEventListener('change', async () => {
+			await storage.setValue(el.value as Flavor);
+			await applyTheme();
+		});
+	}
+
+	darkScheme.addEventListener('change', applyTheme);
+	await applyTheme();
 
 	for (const [selector, storage] of Object.entries({
 		specificFolders: specificFolders,
