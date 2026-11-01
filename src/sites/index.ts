@@ -17,7 +17,11 @@ export type ReplacementSelectorSet = {
 	icon: string;
 	isDirectory: FnWithContext<boolean>;
 	isSubmodule: FnWithContext<boolean>;
-	isCollapsable: FnWithContext<boolean>;
+	isSymlink?: FnWithContext<boolean>;
+	/** Selector matching the row element while its directory is expanded, to show the open folder icon. */
+	open?: string;
+	/** Add the icon as this pseudo-element of the `icon` element instead of replacing its contents, for rows without an icon of their own. */
+	pseudo?: '::before' | '::after';
 	getFilename?: FnWithContext<string>;
 	styles?: string;
 };

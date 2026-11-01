@@ -14,7 +14,7 @@ import { createStylesElement } from '@/utils';
 import { flavorEntries } from '@catppuccin/palette';
 
 function injectStyles() {
-	const styles = createStylesElement();
+	const styles = createStylesElement('catppuccin-icons-css-variables');
 
 	styles.textContent = flavorEntries
 		.map(
