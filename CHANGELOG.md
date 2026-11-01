@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.7.0](https://github.com/catppuccin/web-file-explorer-icons/compare/v1.6.1...v1.7.0) (2026-11-01)
+
+
+### Features
+
+* add automatic light/dark flavor switching ([#275](https://github.com/catppuccin/web-file-explorer-icons/issues/275)) ([70936f6](https://github.com/catppuccin/web-file-explorer-icons/commit/70936f63c84a48b661a934124402d4a9a1813e67))
+* replace icons via css overlays instead of inserting elements ([a3f1b87](https://github.com/catppuccin/web-file-explorer-icons/commit/a3f1b8723fe55a44d1699befa6ba7afe337db55c))
+* support sourcehut ([#279](https://github.com/catppuccin/web-file-explorer-icons/issues/279)) ([0813576](https://github.com/catppuccin/web-file-explorer-icons/commit/0813576e0a7853f8d5dc2d2c73d2dd615d5baf66))
+
 ## [1.6.1](https://github.com/catppuccin/web-file-explorer-icons/compare/v1.6.0...v1.6.1) (2025-12-19)
 
 
