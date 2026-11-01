@@ -15,6 +15,8 @@
 		"@humanfs/types": "0.15.0",
 		"@wxt-dev/auto-icons": "1.1.0",
 		"jiti": "2.7.0",
+		"playwright": "1.64.1",
+		"vitest": "5.0.5",
 		"wxt": "0.20.18"
 	},
 	"scripts": {
@@ -26,6 +28,7 @@
 		"build:firefox": "wxt build --browser firefox",
 		"zip": "wxt zip",
 		"zip:firefox": "wxt zip --browser firefox",
+		"test": "vitest run",
 		"postinstall": "wxt prepare"
 	},
 	"type": "module",
