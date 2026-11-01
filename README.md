@@ -48,6 +48,7 @@ Applies Catppuccin-themed code/file icons to file explorers on the following sit
 - [Forgejo](https://forgejo.org)
 - [Bitbucket](https://bitbucket.org)
 - [Tangled](https://tangled.org)
+- [Azure DevOps](https://dev.azure.com)
 
 ## Usage
 

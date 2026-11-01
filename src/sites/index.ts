@@ -4,6 +4,7 @@ import { gitea } from './gitea';
 import { github } from './github';
 import { gitlab } from './gitlab';
 import { tangled } from './tangled';
+import { devops } from './devops';
 
 export type FnWithContext<T> = (
 	rowEl: HTMLElement,
@@ -44,6 +45,7 @@ export const sites: Array<Site> = [
 	forgejo,
 	bitbucket,
 	tangled,
+	devops
 ];
 export const matches: Array<string> = sites
 	.flatMap((site) => site.domains)
