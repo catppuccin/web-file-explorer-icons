@@ -23,10 +23,16 @@ const repositoryMainImplementation: ReplacementSelectorSet = {
 	row: '.react-directory-filename-column',
 	filename: '.react-directory-filename-cell a',
 	icon: 'svg',
-	isDirectory: (_rowEl, _fileNameEl, iconEl) =>
-		iconEl.classList.contains('icon-directory'),
+	// Symlinks to files also have the `icon-directory` class.
+	isDirectory: (_rowEl, fileNameEl, iconEl) =>
+		iconEl.classList.contains('icon-directory') &&
+		!fileNameEl.getAttribute('aria-label')?.endsWith('(Symlink to file)'),
 	isSubmodule: (_rowEl, fileNameEl, _iconEl) =>
 		fileNameEl.getAttribute('aria-label')?.includes('(Submodule)'),
+	isSymlink: (_rowEl, fileNameEl, _iconEl) =>
+		/\(Symlink to (file|directory)\)$/.test(
+			fileNameEl.getAttribute('aria-label') ?? '',
+		),
 };
 
 const repositoryMainParentDirectoryImplementation: ReplacementSelectorSet = {
@@ -46,6 +52,9 @@ const pullRequestTreeImplementation: ReplacementSelectorSet = {
 		iconEl.getAttribute('aria-label') === 'Directory',
 	isSubmodule: (_rowEl, _fileNameEl, iconEl) =>
 		iconEl.getAttribute('aria-label') === 'Submodule',
+	// Symlinks to both files and directories are labelled `Symlink Directory`, so they cannot be told apart.
+	isSymlink: (_rowEl, _fileNameEl, iconEl) =>
+		iconEl.getAttribute('aria-label') === 'Symlink Directory',
 	open: '[aria-expanded="true"]',
 };
 

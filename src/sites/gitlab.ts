@@ -8,6 +8,9 @@ const repositoryMainImplementation: ReplacementSelectorSet = {
 		iconEl.classList.contains('folder-icon'),
 	isSubmodule: (_rowEl, fileNameEl, _iconEl) =>
 		fileNameEl.classList.contains('is-submodule'),
+	// Symlinks to both files and directories use the same icon.
+	isSymlink: (_rowEl, _fileNameEl, iconEl) =>
+		iconEl.getAttribute('data-testid') === 'symlink-icon',
 };
 
 const repositorySideTreeImplementation: ReplacementSelectorSet = {
@@ -17,6 +20,9 @@ const repositorySideTreeImplementation: ReplacementSelectorSet = {
 	isDirectory: (rowEl, _fileNameEl, _iconEl) =>
 		rowEl.classList.contains('folder'),
 	isSubmodule: (_rowEl, _fileNameEl, _iconEl) => false, // TODO: determine submodule flag
+	// Symlinks to both files and directories use the same icon.
+	isSymlink: (_rowEl, _fileNameEl, iconEl) =>
+		iconEl.getAttribute('data-testid') === 'symlink-icon',
 	open: '.is-open',
 };
 
@@ -46,6 +52,9 @@ const mergeRequestsTreeImplementation: ReplacementSelectorSet = {
 		rowEl.classList.contains('folder'),
 	isSubmodule: (_rowEl, _fileNameEl, iconEl) =>
 		iconEl.firstElementChild.getAttribute('href').endsWith('#folder-git'),
+	// Symlinks to both files and directories use the same icon.
+	isSymlink: (_rowEl, _fileNameEl, iconEl) =>
+		iconEl.getAttribute('data-testid') === 'symlink-icon',
 	open: '.is-open',
 	// Names have [LEFT-TO-RIGHT MARKs](https://en.wikipedia.org/wiki/Left-to-right_mark) around the extension, e.g. `go.\u200Emod\u200E`.
 	getFilename: (_rowEl, fileNameEl, _iconEl) =>

@@ -7,9 +7,13 @@ const mainRepositoryImplementation: ReplacementSelectorSet = {
 	filename: '.name a',
 	icon: '.svg',
 	isDirectory: (_rowEl, _fileNameEl, iconEl) =>
-		iconEl.classList.contains('octicon-file-directory-fill'),
+		iconEl.classList.contains('octicon-file-directory-fill') ||
+		iconEl.classList.contains('octicon-file-directory-symlink'),
 	isSubmodule: (_rowEl, _fileNameEl, iconEl) =>
 		iconEl.classList.contains('octicon-file-submodule'),
+	isSymlink: (_rowEl, _fileNameEl, iconEl) =>
+		iconEl.classList.contains('octicon-file-symlink-file') ||
+		iconEl.classList.contains('octicon-file-directory-symlink'),
 };
 
 const mainRepositoryParentLinkImplementation: ReplacementSelectorSet = {
@@ -24,10 +28,14 @@ const repositorySideTreeImplementation: ReplacementSelectorSet = {
 	row: '.view-file-tree-items .tree-item',
 	filename: '.item-content .gt-ellipsis',
 	icon: '.item-content .svg',
-	isDirectory: (rowEl, _fileNameEl, _iconEl) =>
-		rowEl.classList.contains('type-directory'),
+	isDirectory: (rowEl, _fileNameEl, iconEl) =>
+		rowEl.classList.contains('type-directory') ||
+		iconEl.classList.contains('octicon-file-directory-symlink'),
 	isSubmodule: (_rowEl, _fileNameEl, iconEl) =>
 		iconEl.classList.contains('octicon-file-submodule'),
+	isSymlink: (_rowEl, _fileNameEl, iconEl) =>
+		iconEl.classList.contains('octicon-file-symlink-file') ||
+		iconEl.classList.contains('octicon-file-directory-symlink'),
 	open: ':has(.item-toggle .octicon-chevron-down)',
 };
 
