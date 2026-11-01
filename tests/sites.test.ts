@@ -18,8 +18,8 @@ import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 type TestCase = {
 	name: string;
 	url: string;
-	/** A sample of file names and the icons they should be replaced with. */
-	expected: Record<string, string>;
+	/** A sample of file names and the icons they should be replaced with: one icon for every row with that name, or one per row, in order. */
+	expected: Record<string, string | Array<string>>;
 };
 
 // Prefer URLs pinned to a commit, pull request, or tag so the expected files do not change.
@@ -67,6 +67,29 @@ const cases: Array<[Site, Array<TestCase>]> = [
 				},
 			},
 			{
+				name: 'repository symlinks',
+				url: 'https://github.com/catppuccin/vscode/tree/befc9e6fc41980f4241408f7049755d47c06ff45/packages/catppuccin-vsc',
+				expected: {
+					// The side tree first (where symlinks are not marked, so the symlinked directory looks like a file), then the main listing (rendered twice for narrow and wide layouts).
+					'README.md': ['readme', 'readme', 'symlink', 'symlink'],
+					assets: [
+						'folder_assets',
+						'_file',
+						'folder_symlink',
+						'folder_symlink',
+					],
+				},
+			},
+			{
+				name: 'pull request tree symlinks',
+				url: 'https://github.com/catppuccin/vscode/pull/243/files',
+				expected: {
+					// Symlinks to files and directories cannot be told apart here.
+					'README.md': ['readme', 'symlink', 'readme'],
+					assets: ['folder_assets', 'symlink'],
+				},
+			},
+			{
 				name: 'release assets',
 				url: 'https://github.com/catppuccin/vscode-icons/releases/tag/v1.26.0',
 				expected: {
@@ -95,6 +118,9 @@ const cases: Array<[Site, Array<TestCase>]> = [
 				expected: {
 					'.gitlab': 'folder_gitlab',
 					'.github': 'folder_github',
+					// Symlinks.
+					'Gemfile.next': 'symlink',
+					GITLAB_WORKHORSE_VERSION: 'symlink',
 				},
 			},
 			{
@@ -229,10 +255,17 @@ for (const [site, siteCases] of cases) {
 				).toEqual([]);
 				expect(
 					Object.fromEntries(
-						Object.keys(expected).map((fileName) => [
-							fileName,
-							rows.find((row) => row.name === fileName)?.icon,
-						]),
+						Object.entries(expected).map(([fileName, icon]) => {
+							const icons = rows
+								.filter((row) => row.name === fileName)
+								.map((row) => row.icon);
+							// Collapse to a single icon when that is what's expected and every row matches, otherwise show each row's icon.
+							const matchesAll =
+								typeof icon === 'string' &&
+								icons.length > 0 &&
+								icons.every((rowIcon) => rowIcon === icon);
+							return [fileName, matchesAll ? icon : icons];
+						}),
 					),
 				).toEqual(expected);
 				expect(hydrationErrors).toEqual([]);
