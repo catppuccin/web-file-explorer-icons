@@ -37,7 +37,7 @@ export default defineContentScript({
 async function runReplacements({ replacements, dark, system }: Site) {
 	createStylesElement('catppuccin-file-explorer-icons').textContent =
 		createReplacementStyles(replacements);
-	await injectIconStyles(
+	const useIcon = await injectIconStyles(
 		createStylesElement('catppuccin-file-explorer-icons-icons'),
 		{ dark, system },
 	);
@@ -53,7 +53,7 @@ async function runReplacements({ replacements, dark, system }: Site) {
 				if (rowEl) rowEls.add(rowEl);
 			}
 			for (const rowEl of rowEls)
-				await replaceIconInRow(rowEl, replacement);
+				await replaceIconInRow(rowEl, replacement, useIcon);
 		});
 
 		// Monitor DOM elements that match a CSS selector.
@@ -72,7 +72,7 @@ async function runReplacements({ replacements, dark, system }: Site) {
 						'data-kind',
 					],
 				});
-				await replaceIconInRow(rowEl, replacement);
+				await replaceIconInRow(rowEl, replacement, useIcon);
 			},
 		});
 	}
