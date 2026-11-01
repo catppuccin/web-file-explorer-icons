@@ -1,40 +1,47 @@
 import type { ReplacementSelectorSet, Site } from './index.js';
 
+import { ATTRIBUTE_PREFIX } from '../constants';
+
 const mainRepositoryImplementation: ReplacementSelectorSet = {
-	row: 'table[data-qa="repository-directory"] tr',
+	row: 'table[data-qa="repository-directory"] tr:not(:has(a[aria-label="Parent directory"]))',
 	filename: 'td:first-of-type',
 	icon: 'svg',
-	isDirectory: (_rowEl, _fileNameEl, iconEl) =>
-		iconEl.parentElement.getAttribute('aria-label') === 'Directory,',
+	isDirectory: (rowEl, _fileNameEl, _iconEl) =>
+		rowEl.querySelector('a[aria-label^="Directory,"]') !== null,
 	isSubmodule: (_rowEl, _fileNameEl, iconEl) =>
 		iconEl.classList.contains('octicon-file-submodule'),
-	isCollapsable: (_rowEl, _fileNameEl, _iconEl) => false,
 };
+mainRepositoryImplementation.styles = /* css */ `
+/* Remove tinted box behind folder icons and shrink file icons to 16px for consistency. */
+${mainRepositoryImplementation.row}[${ATTRIBUTE_PREFIX}] {
+	span:has(> span > svg) {
+		background: none !important;
+	}
+	svg {
+		background-size: 16px !important;
+	}
+}
+`.trim();
 
 const fileContentsHeaderImplementation: ReplacementSelectorSet = {
 	row: '[data-qa="bk-file__header"]',
 	filename: 'span:has(+ div [aria-label="Copy File Path"])',
-	icon: 'div:first-of-type svg',
+	// Only the leading icon, not those of the copy and overflow buttons.
+	icon: '[data-qa="bk-file__header"] > div:first-child svg',
 	isDirectory: (_rowEl, _fileNameEl, _iconEl) => false,
 	isSubmodule: (_rowEl, _fileNameEl, _iconEl) => false,
-	isCollapsable: (_rowEl, _fileNameEl, _iconEl) => false,
 };
-
-const directoryContentsHeaderImplementation: ReplacementSelectorSet = {
-	row: 'div:has(+ [data-qa="repository-directory"]), div:has(+ .rah-static [data-qa="repository-directory"])',
-	filename:
-		'div:has(span[aria-label="Directory,"] svg) + span > span:last-of-type',
-	icon: 'span[aria-label="Directory,"] svg',
-	isDirectory: (_rowEl, _fileNameEl, _iconEl) => true,
-	isSubmodule: (_rowEl, _fileNameEl, _iconEl) => false,
-	isCollapsable: (_rowEl, _fileNameEl, _iconEl) => false,
-};
+fileContentsHeaderImplementation.styles = /* css */ `
+/* Shrink icon size to 16px to match. */
+${fileContentsHeaderImplementation.row}[${ATTRIBUTE_PREFIX}] > div:first-child svg {
+	background-size: 16px !important;
+}
+`.trim();
 
 export const bitbucket: Site = {
 	domains: ['bitbucket.org'],
 	replacements: [
 		mainRepositoryImplementation,
 		fileContentsHeaderImplementation,
-		directoryContentsHeaderImplementation,
 	],
 };

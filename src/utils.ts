@@ -1,7 +1,5 @@
-export function createStylesElement() {
-	const id = 'catppuccin-icons-css-variables';
-
-	let styles = document.querySelector(`#${id}`);
+export function createStylesElement(id: string) {
+	let styles = document.querySelector<HTMLStyleElement>(`#${id}`);
 
 	if (!styles) {
 		styles = document.createElement('style');

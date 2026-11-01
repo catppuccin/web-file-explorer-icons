@@ -1,5 +1,5 @@
 import type { ReplacementSelectorSet } from '@/sites';
-import type { IconName } from '@/types';
+import type { Flavor, IconName } from '@/types';
 
 import { getAssociations } from '@/associations';
 import { ATTRIBUTE_PREFIX, CSS_SELECTOR_SELF } from '@/constants';
@@ -9,66 +9,132 @@ import { flavors } from '@catppuccin/palette';
 
 import icons from '@/icons.json';
 
-export async function injectStyles(stylesEl: Element, siteStyles: string) {
-	stylesEl.textContent =
-		/* css */ `
-	:root {
-	${flavors[await flavor.getValue()].colorEntries
-		.map(([name, { hex }]) => `--ctp-${name}: ${hex};`)
-		.join('\n  ')}
-	}
-	`.trim() + siteStyles;
+/*
+ * Each row in a given file tree is tagged with an attribute specifying the associated icon,
+ * and injected styles overlay that icon as the background of the original icon element (whose own contents are hidden).
+ * Other approaches that rely on inserting or removing elements may break hydration with some frameworks (e.g. Svelte, due to hydration mismatch).
+ */
+
+const ICON_PROPERTY = '--catppuccin-icon';
+const OPEN_ICON_PROPERTY = '--catppuccin-icon-open';
+
+/** Create the static styles that paint each replacement's icon element with its row's icon, plus any site-specific styles. */
+export function createReplacementStyles(
+	replacements: Array<ReplacementSelectorSet>,
+): string {
+	return replacements
+		.map((replacement) => {
+			const pseudo = replacement.pseudo ?? '';
+			const icon = `:is(${replacement.row})[${ATTRIBUTE_PREFIX}] :is(${replacement.icon})${pseudo}`;
+			const openIcon = replacement.open
+				? `:is(${replacement.row})[${ATTRIBUTE_PREFIX}]:is(${replacement.open}) :is(${replacement.icon})${pseudo}`
+				: undefined;
+
+			return [
+				replacement.pseudo
+					? /* css */ `
+${icon} {
+	content: '' !important;
+	display: inline-block;
+	background: var(${ICON_PROPERTY}) center / contain no-repeat !important;
+}`
+					: /* css */ `
+${icon} {
+	background: var(${ICON_PROPERTY}) center / contain no-repeat !important;
+}
+${icon} > * {
+	display: none !important;
+}
+${icon}::before, ${icon}::after {
+	content: none !important;
+}`,
+				openIcon &&
+					/* css */ `
+${openIcon} {
+	background-image: var(${OPEN_ICON_PROPERTY}, var(${ICON_PROPERTY})) !important;
+}`,
+				replacement.styles,
+			]
+				.filter(Boolean)
+				.join('\n');
+		})
+		.join('\n');
 }
 
-async function createIconElement(
-	iconName: IconName,
-	fileName: string,
-	originalIconEl: HTMLElement,
-): Promise<SVGSVGElement> {
-	const temp = document.createElement('div');
-	if (await monochrome.getValue()) {
-		temp.innerHTML = icons[iconName].replaceAll(
-			/var\(--ctp-\w+\)/g,
-			'var(--ctp-text)',
-		);
+const usedIcons = new Set<IconName>();
+let iconStylesEl: HTMLStyleElement;
+let currentFlavor: Flavor;
+let isMonochrome: boolean;
+
+/** Create a CSS `url()` of the icon as an SVG data URL, with the current flavor's colors inserted in. */
+function createIconDataUrl(iconName: IconName): string {
+	const { colors } = flavors[currentFlavor];
+	const svg = icons[iconName].replaceAll(
+		/var\(--ctp-(\w+)\)/g,
+		(_, color: keyof typeof colors) =>
+			(isMonochrome ? colors.text : colors[color]).hex,
+	);
+	return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+}
+
+/** Create the rule defining the icon (and its open variant, if any) for rows tagged with it. */
+function createIconStyleRule(iconName: IconName): string {
+	const openIconName = `${iconName}_open` as IconName;
+	const openIconExists = openIconName in icons;
+	const openIconDecl = openIconExists
+		? `${OPEN_ICON_PROPERTY}: ${createIconDataUrl(openIconName)};`
+		: '';
+	return `[${ATTRIBUTE_PREFIX}="${iconName}"] { ${ICON_PROPERTY}: ${createIconDataUrl(iconName)}; ${openIconDecl} }`;
+}
+
+/** Regenerate the rules for every icon used so far, e.g. after the flavor changes. */
+function renderIconStyles() {
+	iconStylesEl.textContent = [...usedIcons]
+		.map(createIconStyleRule)
+		.join('\n');
+}
+
+/** Set the element icon rules are written to, and keep them in sync with the flavor and monochrome settings. */
+export async function injectIconStyles(stylesEl: HTMLStyleElement) {
+	iconStylesEl = stylesEl;
+	currentFlavor = await flavor.getValue();
+	isMonochrome = await monochrome.getValue();
+
+	flavor.watch((value) => {
+		currentFlavor = value;
+		renderIconStyles();
+	});
+	monochrome.watch((value) => {
+		isMonochrome = value;
+		renderIconStyles();
+	});
+}
+
+/** Define the icon's rule if it has not been used before. */
+function useIcon(iconName: IconName) {
+	if (usedIcons.has(iconName)) return;
+	usedIcons.add(iconName);
+
+	const rule = createIconStyleRule(iconName);
+	if (iconStylesEl.sheet) {
+		iconStylesEl.sheet.insertRule(rule, iconStylesEl.sheet.cssRules.length);
 	} else {
-		temp.innerHTML = icons[iconName];
+		iconStylesEl.textContent += `\n${rule}`;
 	}
-	const svg = temp.firstElementChild as SVGSVGElement;
-	svg.setAttribute(ATTRIBUTE_PREFIX, '');
-	svg.setAttribute(`${ATTRIBUTE_PREFIX}-iconname`, iconName);
-	svg.setAttribute(`${ATTRIBUTE_PREFIX}-filename`, fileName);
-
-	for (const attribute of originalIconEl.getAttributeNames()) {
-		if (
-			!(
-				attribute.startsWith(ATTRIBUTE_PREFIX) ||
-				[
-					'viewBox',
-					'stroke-width',
-					'stroke-linecap',
-					'stroke-linejoin',
-				].includes(attribute)
-			)
-		) {
-			svg.setAttribute(
-				attribute,
-				originalIconEl.getAttribute(attribute) as string,
-			);
-		}
-	}
-
-	return svg;
 }
 
+/** Find the icon for a file or directory, based on the default and custom associations. */
 async function findIconMatch(
 	fileName: string,
 	fileExtensions: Array<string>,
 	isSubmodule: boolean,
 	isDirectory: boolean,
+	isSymlink: boolean,
 ): Promise<IconName> {
 	// Special parent directory folder icon.
 	if (fileName === '..') return '_folder';
+
+	if (isSymlink) return isDirectory ? 'folder_symlink' : 'symlink';
 
 	const associations = await getAssociations();
 	const useSpecificFolders = await specificFolders.getValue();
@@ -101,13 +167,14 @@ async function findIconMatch(
 	return '_file';
 }
 
+/** Find the icon for a row and tag the row with it, or clear the tag if the row has no icon or filename. */
 export async function replaceIconInRow(
 	rowEl: HTMLElement,
 	selectors: ReplacementSelectorSet,
 ) {
 	const iconEl = rowEl.querySelector(selectors.icon) as HTMLElement;
-	// Icon already has extension prefix, not necessary to replace again.
-	if (!iconEl || iconEl?.hasAttribute(ATTRIBUTE_PREFIX)) return;
+	// Clear any previous icon, in case the site reused this row for something else.
+	if (!iconEl) return rowEl.removeAttribute(ATTRIBUTE_PREFIX);
 
 	const fileNameEl =
 		selectors.filename === CSS_SELECTOR_SELF
@@ -115,16 +182,11 @@ export async function replaceIconInRow(
 			: (rowEl.querySelector(
 					selectors.filename as string,
 				) as HTMLElement);
-	if (!fileNameEl) return;
+	if (!fileNameEl) return rowEl.removeAttribute(ATTRIBUTE_PREFIX);
 	const fileName =
 		'getFilename' in selectors
 			? selectors.getFilename(rowEl, fileNameEl, iconEl)
-			: fileNameEl.textContent
-					?.split('/')
-					.at(-1)
-					.trim()
-					/* Remove [Unicode LEFT-TO-RIGHT MARK](https://en.wikipedia.org/wiki/Left-to-right_mark) used on GitLab's merge request diff file tree. */
-					.replace(/\u200E/g, '');
+			: fileNameEl.textContent?.split('/').at(-1).trim();
 
 	const fileExtensions: Array<string> = [];
 	// Avoid doing an explosive combination of extensions for very long filenames
@@ -139,41 +201,18 @@ export async function replaceIconInRow(
 
 	const isDirectory = selectors.isDirectory(rowEl, fileNameEl, iconEl);
 	const isSubmodule = selectors.isSubmodule(rowEl, fileNameEl, iconEl);
-	const isCollapsable = selectors.isCollapsable(rowEl, fileNameEl, iconEl);
+	const isSymlink = selectors.isSymlink?.(rowEl, fileNameEl, iconEl) ?? false;
 
 	const iconName = await findIconMatch(
 		fileName,
 		fileExtensions,
 		isSubmodule,
 		isDirectory,
+		isSymlink,
 	);
 
-	const replacementEl = await createIconElement(iconName, fileName, iconEl);
-
-	// Check if element sibling before current element was inserted by extension, replace the old replacement with the new one instead.
-	const prevEl = iconEl.previousElementSibling;
-	if (prevEl?.hasAttribute(ATTRIBUTE_PREFIX)) {
-		replacementEl.replaceWith(prevEl);
-	}
-	// If the current icon element is an icon from this extension, replace it with the new icon.
-	else if (iconEl.hasAttribute(ATTRIBUTE_PREFIX)) {
-		iconEl.replaceWith(replacementEl);
-	}
-	// If neither of the above, prepend the new icon to the original icon element.
-	// If we remove the icon, GitHub code view crashes when you navigate through the
-	// tree view. Instead, we just hide it via `style` attribute (not CSS class).
-	else {
-		iconEl.style.display = 'none';
-		iconEl.before(replacementEl);
-	}
-
-	if (isCollapsable) {
-		const companionEl = await createIconElement(
-			`${iconName}_open` as IconName,
-			fileName,
-			iconEl,
-		);
-
-		replacementEl.after(companionEl);
-	}
+	// Define the icon's styles before tagging the row so the original icon is never hidden without a replacement.
+	useIcon(iconName);
+	if (rowEl.getAttribute(ATTRIBUTE_PREFIX) !== iconName)
+		rowEl.setAttribute(ATTRIBUTE_PREFIX, iconName);
 }

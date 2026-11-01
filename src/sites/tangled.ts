@@ -1,41 +1,39 @@
 import type { ReplacementSelectorSet, Site } from '.';
 
-import { ATTRIBUTE_PREFIX } from '../constants';
-
-const mainRepositoryImplementation: ReplacementSelectorSet = {
-	row: '#file-tree > div, .tree > div',
-	filename: 'a',
-	icon: 'svg',
-	isDirectory: (_rowEl, _fileNameEl, iconEl) =>
-		iconEl.classList.contains('fill-current'),
-	isSubmodule: (_rowEl, _fileNameEl, _iconEl) => false, // TODO: Implement isSubmodule.
-	isCollapsable: (_rowEl, _fileNameEl, _iconEl) => false,
-};
-
-const commitTreeImplementation: ReplacementSelectorSet = {
-	row: '.diff-stat .tree-directory, .diff-stat .tree-file',
-	filename: '.filename',
-	icon: 'svg',
+// Both the repository file tree and the files of the commit/pull diff file tree.
+const fileTreeImplementation: ReplacementSelectorSet = {
+	row: '.file-tree .tree-entry, .diff-file-tree .tree-file',
+	filename: '.tree-name',
+	icon: '.tree-icon',
+	// `data-kind` is the entry kind: one of `directory`, `submodule`, `symlink`, or `file` (see https://tangled.org/tangled.org/core/blob/master/web/src/lib/components/repo/FileTree.svelte).
 	isDirectory: (rowEl, _fileNameEl, _iconEl) =>
-		rowEl.classList.contains('tree-directory'),
-	isSubmodule: (_rowEl, _fileNameEl, _iconEl) => false, // TODO: Implement isSubmodule.
-	isCollapsable: (rowEl, fileNameEl, iconEl) =>
-		commitTreeImplementation.isDirectory(rowEl, fileNameEl, iconEl),
+		rowEl.dataset.kind === 'directory',
+	isSubmodule: (rowEl, _fileNameEl, _iconEl) =>
+		rowEl.dataset.kind === 'submodule',
+	isSymlink: (rowEl, _fileNameEl, _iconEl) =>
+		rowEl.dataset.kind === 'symlink',
 };
-commitTreeImplementation.styles = /* css */ `
-/* Hide directory icons by default. */
-${commitTreeImplementation.row.split(',').at(0)} ${commitTreeImplementation.icon} {
-	display: none;
-}
 
-/* Show relevant extension directory icon depending on open/closed state. */
-details[open] > summary > .tree-directory svg[${ATTRIBUTE_PREFIX}-iconname$='_open'],
-details:not([open]) > summary > .tree-directory svg[${ATTRIBUTE_PREFIX}]:not([${ATTRIBUTE_PREFIX}-iconname$='_open']) {
-	display: inline-block !important;
+const diffTreeDirectoryImplementation: ReplacementSelectorSet = {
+	row: '.diff-file-tree .tree-directory',
+	filename: '.tree-name',
+	icon: '.tree-name',
+	pseudo: '::before', // directories here only have a toggle chevron and no icon; adds one before the path name using a ::before psuedo element.
+	isDirectory: (_rowEl, _fileNameEl, _iconEl) => true,
+	isSubmodule: (_rowEl, _fileNameEl, _iconEl) => false,
+	open: '[aria-expanded="true"]',
+};
+diffTreeDirectoryImplementation.styles = /* css */ `
+${diffTreeDirectoryImplementation.row} .tree-name::before {
+	/* Match the size of file icons and the row's gap for psuedo icons. */
+	width: 14px;
+	height: 14px;
+	margin-right: 8px;
+	vertical-align: -2px;
 }
-	`.trim();
+`.trim();
 
 export const tangled: Site = {
 	domains: ['tangled.org'],
-	replacements: [mainRepositoryImplementation, commitTreeImplementation],
+	replacements: [fileTreeImplementation, diffTreeDirectoryImplementation],
 };
