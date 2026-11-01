@@ -1,19 +1,18 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.2.7/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.6.4/schema.json",
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",
 		"useIgnoreFile": true
 	},
 	"files": {
-		"includes": ["**", "!vscode-icons/"]
+		"includes": ["**", "!vscode-icons/", "!pnpm-lock.yaml"]
 	},
 	"formatter": {
 		"enabled": true,
 		"formatWithErrors": false,
 		"useEditorconfig": true,
 		"lineWidth": 80,
-		"includes": ["**", "!**/pnpm-lock.yaml"]
 	},
 	"assist": {
 		"actions": {
@@ -41,7 +40,7 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true,
+			"preset": "recommended",
 			"correctness": {
 				"noUnusedImports": "warn",
 				"noUnusedVariables": "warn"
