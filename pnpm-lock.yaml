@@ -32,13 +32,13 @@ importers:
         version: 0.15.0
       '@wxt-dev/auto-icons':
         specifier: 1.1.0
-        version: 1.1.0(wxt@0.20.18(jiti@2.6.1)(rollup@4.50.0))
+        version: 1.1.0(wxt@0.20.18(jiti@2.7.0)(rollup@4.50.0))
       jiti:
-        specifier: 2.6.1
-        version: 2.6.1
+        specifier: 2.7.0
+        version: 2.7.0
       wxt:
         specifier: 0.20.18
-        version: 0.20.18(jiti@2.6.1)(rollup@4.50.0)
+        version: 0.20.18(jiti@2.7.0)(rollup@4.50.0)
 
 packages:
 
@@ -1338,8 +1338,8 @@ packages:
     resolution: {integrity: sha512-WhB9zCku7EGTj/HQQRz5aUQEUeoQZH2bWcltRErOpymJ4boYE6wL9Tbr23krRPSZ+C5zqNSrSw+Cc7sZZ4b7vg==}
     engines: {node: '>=0.10.0'}
 
-  jiti@2.6.1:
-    resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}
+  jiti@2.7.0:
+    resolution: {integrity: sha512-AC/7JofJvZGrrneWNaEnJeOLUx+JlGt7tNa0wZiRPT4MY1wmfKjt2+6O2p2uz2+skll8OZZmJMNqeke7kKbNgQ==}
     hasBin: true
 
   js-tokens@4.0.0:
@@ -1958,6 +1958,7 @@ packages:
 
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   vite-node@5.2.0:
@@ -2571,12 +2572,12 @@ snapshots:
 
   '@webext-core/match-patterns@1.0.3': {}
 
-  '@wxt-dev/auto-icons@1.1.0(wxt@0.20.18(jiti@2.6.1)(rollup@4.50.0))':
+  '@wxt-dev/auto-icons@1.1.0(wxt@0.20.18(jiti@2.7.0)(rollup@4.50.0))':
     dependencies:
       defu: 6.1.4
       fs-extra: 11.3.1
       sharp: 0.34.4
-      wxt: 0.20.18(jiti@2.6.1)(rollup@4.50.0)
+      wxt: 0.20.18(jiti@2.7.0)(rollup@4.50.0)
 
   '@wxt-dev/browser@0.1.37':
     dependencies:
@@ -2696,7 +2697,7 @@ snapshots:
       dotenv: 17.3.1
       exsolve: 1.0.8
       giget: 2.0.0
-      jiti: 2.6.1
+      jiti: 2.7.0
       ohash: 2.0.11
       pathe: 2.0.3
       perfect-debounce: 2.1.0
@@ -3216,7 +3217,7 @@ snapshots:
 
   isobject@3.0.1: {}
 
-  jiti@2.6.1: {}
+  jiti@2.7.0: {}
 
   js-tokens@4.0.0: {}
 
@@ -3936,13 +3937,13 @@ snapshots:
 
   uuid@8.3.2: {}
 
-  vite-node@5.2.0(jiti@2.6.1):
+  vite-node@5.2.0(jiti@2.7.0):
     dependencies:
       cac: 6.7.14
       es-module-lexer: 1.7.0
       obug: 2.1.1
       pathe: 2.0.3
-      vite: 7.3.1(jiti@2.6.1)
+      vite: 7.3.1(jiti@2.7.0)
     transitivePeerDependencies:
       - '@types/node'
       - jiti
@@ -3956,7 +3957,7 @@ snapshots:
       - tsx
       - yaml
 
-  vite@7.3.1(jiti@2.6.1):
+  vite@7.3.1(jiti@2.7.0):
     dependencies:
       esbuild: 0.27.2
       fdir: 6.5.0(picomatch@4.0.3)
@@ -3966,7 +3967,7 @@ snapshots:
       tinyglobby: 0.2.15
     optionalDependencies:
       fsevents: 2.3.3
-      jiti: 2.6.1
+      jiti: 2.7.0
 
   watchpack@2.4.4:
     dependencies:
@@ -4109,7 +4110,7 @@ snapshots:
       is-wsl: 3.1.0
       powershell-utils: 0.1.0
 
-  wxt@0.20.18(jiti@2.6.1)(rollup@4.50.0):
+  wxt@0.20.18(jiti@2.7.0)(rollup@4.50.0):
     dependencies:
       '@1natsu/wait-element': 4.1.2
       '@aklinker1/rollup-plugin-visualizer': 5.12.0(rollup@4.50.0)
@@ -4153,8 +4154,8 @@ snapshots:
       publish-browser-extension: 3.0.2
       scule: 1.3.0
       unimport: 3.14.5(rollup@4.50.0)
-      vite: 7.3.1(jiti@2.6.1)
-      vite-node: 5.2.0(jiti@2.6.1)
+      vite: 7.3.1(jiti@2.7.0)
+      vite-node: 5.2.0(jiti@2.7.0)
       web-ext-run: 0.2.4
     transitivePeerDependencies:
       - '@types/node'
