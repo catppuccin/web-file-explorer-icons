@@ -67,106 +67,114 @@ ${openIcon} {
 		.join('\n');
 }
 
-const usedIcons = new Set<IconName>();
-let iconStylesEl: HTMLStyleElement;
-let siteTheme: Pick<Site, 'dark' | 'system'>;
-let currentFlavor: FlavorSetting;
-let currentLightFlavor: Flavor;
-let currentDarkFlavor: Flavor;
-let isMonochrome: boolean;
+/** The settings that affect how icons are drawn. */
+type IconSettings = {
+	flavor: FlavorSetting;
+	lightFlavor: Flavor;
+	darkFlavor: Flavor;
+	monochrome: boolean;
+};
+
+/** How a site chooses its color scheme. */
+type SiteTheme = Pick<Site, 'dark' | 'system'>;
+
+/** Read the current icon settings from storage. */
+async function getIconSettings(): Promise<IconSettings> {
+	return {
+		flavor: await flavor.getValue(),
+		lightFlavor: await lightFlavor.getValue(),
+		darkFlavor: await darkFlavor.getValue(),
+		monochrome: await monochrome.getValue(),
+	};
+}
 
 /** Create a CSS `url()` of the icon as an SVG data URL, with the flavor's colors inserted in. */
-function createIconDataUrl(iconName: IconName, flavor: Flavor): string {
+function createIconDataUrl(
+	iconName: IconName,
+	flavor: Flavor,
+	monochrome: boolean,
+): string {
 	const { colors } = flavors[flavor];
 	const svg = icons[iconName].replaceAll(
 		/var\(--ctp-(\w+)\)/g,
 		(_, color: keyof typeof colors) =>
-			(isMonochrome ? colors.text : colors[color]).hex,
+			(monochrome ? colors.text : colors[color]).hex,
 	);
 	return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 }
 
 /** Create the declarations defining the icon (and its open variant, if any) in the flavor. */
-function createIconDeclarations(iconName: IconName, flavor: Flavor): string {
+function createIconDeclarations(
+	iconName: IconName,
+	flavor: Flavor,
+	monochrome: boolean,
+): string {
 	const openIconName = `${iconName}_open` as IconName;
 	const openIconDecl =
 		openIconName in icons
-			? `${OPEN_ICON_PROPERTY}: ${createIconDataUrl(openIconName, flavor)};`
+			? `${OPEN_ICON_PROPERTY}: ${createIconDataUrl(openIconName, flavor, monochrome)};`
 			: '';
-	return `${ICON_PROPERTY}: ${createIconDataUrl(iconName, flavor)}; ${openIconDecl}`;
+	return `${ICON_PROPERTY}: ${createIconDataUrl(iconName, flavor, monochrome)}; ${openIconDecl}`;
 }
 
 /** Create the style rules for replacing an icon, using the appropriate flavor. */
-function createIconStyleRules(iconName: IconName): Array<string> {
+function createIconStyleRules(
+	iconName: IconName,
+	settings: IconSettings,
+	theme: SiteTheme,
+): Array<string> {
 	const selector = `[${ATTRIBUTE_PREFIX}="${iconName}"]`;
-	if (currentFlavor !== 'auto')
+	if (settings.flavor !== 'auto')
 		return [
-			`${selector} { ${createIconDeclarations(iconName, currentFlavor)} }`,
+			`${selector} { ${createIconDeclarations(iconName, settings.flavor, settings.monochrome)} }`,
 		];
 
-	const dark = createIconDeclarations(iconName, currentDarkFlavor);
+	const dark = createIconDeclarations(
+		iconName,
+		settings.darkFlavor,
+		settings.monochrome,
+	);
 	// Sites that do not say how they choose a color scheme are assumed to follow the system theme.
-	const system = siteTheme.dark || siteTheme.system ? siteTheme.system : '*';
+	const system = theme.dark || theme.system ? theme.system : '*';
 	return [
-		`${selector} { ${createIconDeclarations(iconName, currentLightFlavor)} }`,
-		siteTheme.dark && `:root:is(${siteTheme.dark}) ${selector} { ${dark} }`,
+		`${selector} { ${createIconDeclarations(iconName, settings.lightFlavor, settings.monochrome)} }`,
+		theme.dark && `:root:is(${theme.dark}) ${selector} { ${dark} }`,
 		system &&
 			`@media (prefers-color-scheme: dark) { :root:is(${system}) ${selector} { ${dark} } }`,
 	].filter(Boolean);
 }
 
-/** Regenerate the rules for every icon used so far, e.g. after the flavor changes. */
-function renderIconStyles() {
-	iconStylesEl.textContent = [...usedIcons]
-		.flatMap(createIconStyleRules)
-		.join('\n');
-}
-
-/** Set the element icon rules are written to and how the site chooses its color scheme, and keep the rules in sync with the flavor and monochrome settings. */
+/** Write icon rules to the element, kept in sync with the settings, and return a function that defines an icon's rules the first time it is used. */
 export async function injectIconStyles(
 	stylesEl: HTMLStyleElement,
-	theme: Pick<Site, 'dark' | 'system'>,
-) {
-	iconStylesEl = stylesEl;
-	siteTheme = theme;
-	currentFlavor = await flavor.getValue();
-	currentLightFlavor = await lightFlavor.getValue();
-	currentDarkFlavor = await darkFlavor.getValue();
-	isMonochrome = await monochrome.getValue();
+	theme: SiteTheme,
+): Promise<(iconName: IconName) => void> {
+	const usedIcons = new Set<IconName>();
+	let settings = await getIconSettings();
 
-	flavor.watch((value) => {
-		currentFlavor = value;
-		renderIconStyles();
-	});
-	lightFlavor.watch((value) => {
-		currentLightFlavor = value;
-		renderIconStyles();
-	});
-	darkFlavor.watch((value) => {
-		currentDarkFlavor = value;
-		renderIconStyles();
-	});
-	monochrome.watch((value) => {
-		isMonochrome = value;
-		renderIconStyles();
-	});
-}
-
-/** Define the icon's rules if it has not been used before. */
-function useIcon(iconName: IconName) {
-	if (usedIcons.has(iconName)) return;
-	usedIcons.add(iconName);
-
-	for (const rule of createIconStyleRules(iconName)) {
-		if (iconStylesEl.sheet) {
-			iconStylesEl.sheet.insertRule(
-				rule,
-				iconStylesEl.sheet.cssRules.length,
-			);
-		} else {
-			iconStylesEl.textContent += `\n${rule}`;
-		}
+	for (const item of [flavor, lightFlavor, darkFlavor, monochrome]) {
+		item.watch(async () => {
+			settings = await getIconSettings();
+			stylesEl.textContent = [...usedIcons]
+				.flatMap((iconName) =>
+					createIconStyleRules(iconName, settings, theme),
+				)
+				.join('\n');
+		});
 	}
+
+	return (iconName) => {
+		if (usedIcons.has(iconName)) return;
+		usedIcons.add(iconName);
+
+		for (const rule of createIconStyleRules(iconName, settings, theme)) {
+			if (stylesEl.sheet) {
+				stylesEl.sheet.insertRule(rule, stylesEl.sheet.cssRules.length);
+			} else {
+				stylesEl.textContent += `\n${rule}`;
+			}
+		}
+	};
 }
 
 /** Find the icon for a file or directory, based on the default and custom associations. */
@@ -217,6 +225,7 @@ async function findIconMatch(
 export async function replaceIconInRow(
 	rowEl: HTMLElement,
 	selectors: ReplacementSelectorSet,
+	useIcon: (iconName: IconName) => void,
 ) {
 	const iconEl = rowEl.querySelector(selectors.icon) as HTMLElement;
 	// Clear any previous icon, in case the site reused this row for something else.
