@@ -38,13 +38,13 @@ jobs:
           echo "$(ls -lhp dist/ | grep -v '/$' | awk '{print $5, $9}')" >> $GITHUB_STEP_SUMMARY
 
       - name: Upload compiled Chrome extension
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: catppuccin-web-file-explorer-icons-chrome
           path: dist/chrome-mv3
 
       - name: Upload compiled Firefox extension
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: catppuccin-web-file-explorer-icons-firefox
           path: dist/firefox-mv2
