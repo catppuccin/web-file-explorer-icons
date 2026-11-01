@@ -84,6 +84,8 @@ export default defineConfig({
 			'https://gitea.catppuccin.com/catppuccin/catppuccin',
 			'https://bitbucket.org/atlassian/atlassian-frontend-mirror',
 			'https://tangled.org/@tangled.org/core',
+			'https://git.sr.ht/~sircmpwn/git.sr.ht/tree',
+			'https://hg.sr.ht/~sircmpwn/hg.sr.ht/browse',
 		],
 	},
 });

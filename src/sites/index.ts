@@ -3,6 +3,7 @@ import { forgejo } from './forgejo';
 import { gitea } from './gitea';
 import { github } from './github';
 import { gitlab } from './gitlab';
+import { sourcehut } from './sourcehut';
 import { tangled } from './tangled';
 
 export type FnWithContext<T> = (
@@ -52,6 +53,7 @@ export const sites: Array<Site> = [
 	forgejo,
 	bitbucket,
 	tangled,
+	sourcehut,
 ];
 export const matches: Array<string> = sites
 	.flatMap((site) => site.domains)

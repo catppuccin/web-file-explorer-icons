@@ -6,6 +6,7 @@ import { forgejo } from '@/sites/forgejo';
 import { gitea } from '@/sites/gitea';
 import { github } from '@/sites/github';
 import { gitlab } from '@/sites/gitlab';
+// import { sourcehut } from '@/sites/sourcehut';
 import { tangled } from '@/sites/tangled';
 import {
 	collectRows,
@@ -186,6 +187,38 @@ const cases: Array<[Site, Array<TestCase>]> = [
 			},
 		],
 	],
+	// TODO: Enable once there is a way to test SourceHut, which currently responds with a 502 to headless browsers.
+	// [
+	// 	sourcehut,
+	// 	[
+	// 		{
+	// 			name: 'git repository',
+	// 			url: 'https://git.sr.ht/~sircmpwn/git.sr.ht/tree/96f4fef9d1afb7f68b2eecdbc5c40041086dd749',
+	// 			expected: {
+	// 				'.builds': '_folder',
+	// 				api: 'folder_api',
+	// 				'.gitattributes': 'git',
+	// 				'go.mod': 'go-mod',
+	// 			},
+	// 		},
+	// 		{
+	// 			name: 'git subdirectory',
+	// 			url: 'https://git.sr.ht/~sircmpwn/git.sr.ht/tree/96f4fef9d1afb7f68b2eecdbc5c40041086dd749/item/gitsrht',
+	// 			expected: {
+	// 				'..': '_folder',
+	// 			},
+	// 		},
+	// 		{
+	// 			name: 'mercurial repository',
+	// 			url: 'https://hg.sr.ht/~sircmpwn/hg.sr.ht/browse',
+	// 			expected: {
+	// 				api: 'folder_api',
+	// 				LICENSE: 'license',
+	// 				Makefile: 'makefile',
+	// 			},
+	// 		},
+	// 	],
+	// ],
 ];
 
 let context: BrowserContext;
