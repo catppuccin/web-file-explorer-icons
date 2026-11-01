@@ -6,13 +6,13 @@
 		"useIgnoreFile": true
 	},
 	"files": {
-		"includes": ["**", "!vscode-icons/", "!pnpm-lock.yaml"]
+		"includes": ["**", "!vscode-icons", "!pnpm-lock.yaml"]
 	},
 	"formatter": {
 		"enabled": true,
 		"formatWithErrors": false,
 		"useEditorconfig": true,
-		"lineWidth": 80,
+		"lineWidth": 80
 	},
 	"assist": {
 		"actions": {
@@ -91,10 +91,15 @@
 			"quoteStyle": "single"
 		}
 	},
-	"overrides": [
-		{
-			"includes": ["**/*.{yml,yaml,md}"],
-			"formatter": { "indentStyle": "space", "indentWidth": 2 }
+	"markdown": {
+		"formatter": {
+			"indentStyle": "space",
+			"indentWidth": 2
 		}
-	]
+	},
+	"yaml": {
+		"formatter": {
+			"indentWidth": 2
+		}
+	}
 }
