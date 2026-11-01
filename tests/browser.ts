@@ -8,8 +8,11 @@ import { chromium } from 'playwright';
 
 export const EXTENSION_PATH = join(import.meta.dirname, '../dist/chrome-mv3');
 
-export function launchWithExtension(): Promise<BrowserContext> {
+export function launchWithExtension(
+	options: { colorScheme?: 'light' | 'dark' } = {},
+): Promise<BrowserContext> {
 	return chromium.launchPersistentContext('', {
+		...options,
 		channel: 'chromium',
 		headless: !process.env.HEADED,
 		// Allow `collectRows` to evaluate replacement `getFilename` functions on sites which forbid `eval`.
@@ -93,4 +96,18 @@ export async function waitForReplacements(page: Page) {
 		.waitFor({ timeout: 20_000 })
 		.catch(() => {});
 	await page.waitForTimeout(2_000);
+}
+
+/** Write the extension's settings, by their storage keys without the `local:` prefix. */
+export async function setSettings(
+	context: BrowserContext,
+	settings: Record<string, unknown>,
+) {
+	const worker =
+		context.serviceWorkers()[0] ??
+		(await context.waitForEvent('serviceworker'));
+	await worker.evaluate(
+		(settings) => chrome.storage.local.set(settings),
+		settings,
+	);
 }

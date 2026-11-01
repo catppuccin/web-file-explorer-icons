@@ -34,6 +34,9 @@ const releaseAssetsImplementation: ReplacementSelectorSet = {
 
 export const forgejo: Site = {
 	domains: ['codeberg.org'],
+	// Theme names include the theme, e.g. `forgejo-dark`, `codeberg-auto`.
+	dark: '[data-theme*="-dark"]',
+	system: '[data-theme*="-auto"]',
 	replacements: [
 		mainRepositoryImplementation,
 		diffTreeImplementation,

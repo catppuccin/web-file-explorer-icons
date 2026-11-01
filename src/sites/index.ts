@@ -29,6 +29,10 @@ export type ReplacementSelectorSet = {
 export type Site = {
 	domains: Array<string>;
 	replacements: Array<ReplacementSelectorSet>;
+	/** Selector matching the root element while the site is in dark mode. */
+	dark?: string;
+	/** Selector matching the root element while the site follows the system color scheme. */
+	system?: string;
 };
 
 // import type { Site } from '.';

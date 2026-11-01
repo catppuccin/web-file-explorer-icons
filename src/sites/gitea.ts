@@ -55,6 +55,9 @@ const releaseAssetsImplementation: ReplacementSelectorSet = {
 
 export const gitea: Site = {
 	domains: ['gitea.com'],
+	// Some versions resolve the theme into `data-gitea-theme-dark`, fall back to the theme name (e.g. `gitea-dark`, `gitea-auto`).
+	dark: '[data-gitea-theme-dark="true"], :not([data-gitea-theme-dark])[data-theme*="-dark"]',
+	system: ':not([data-gitea-theme-dark])[data-theme*="-auto"]',
 	replacements: [
 		mainRepositoryImplementation,
 		mainRepositoryParentLinkImplementation,

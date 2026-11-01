@@ -35,5 +35,8 @@ ${diffTreeDirectoryImplementation.row} .tree-name::before {
 
 export const tangled: Site = {
 	domains: ['tangled.org'],
+	// `data-theme` is only set when a scheme is chosen explicitly.
+	dark: '[data-theme="dark"]',
+	system: ':not([data-theme="light"])',
 	replacements: [fileTreeImplementation, diffTreeDirectoryImplementation],
 };

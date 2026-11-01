@@ -73,6 +73,10 @@ section {
 	align-items: center;
 }
 
+section[hidden] {
+	display: none;
+}
+
 section.associations {
 	flex-direction: column;
 	align-items: baseline;

@@ -1,6 +1,14 @@
-import type { Associations, Flavor } from './types';
+import type { Associations, Flavor, FlavorSetting } from './types';
 
-export const flavor = storage.defineItem<Flavor>('local:flavor', {
+export const flavor = storage.defineItem<FlavorSetting>('local:flavor', {
+	fallback: 'mocha',
+});
+
+export const lightFlavor = storage.defineItem<Flavor>('local:lightFlavor', {
+	fallback: 'latte',
+});
+
+export const darkFlavor = storage.defineItem<Flavor>('local:darkFlavor', {
 	fallback: 'mocha',
 });
 

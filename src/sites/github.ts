@@ -62,6 +62,9 @@ const releaseAssetsImplementation: ReplacementSelectorSet = {
 
 export const github: Site = {
 	domains: ['github.com'],
+	// Themes are named for their scheme (e.g. `dark_dimmed`, `light_high_contrast`), and either can be used for either mode.
+	dark: '[data-color-mode="dark"][data-dark-theme^="dark"], [data-color-mode="light"][data-light-theme^="dark"]',
+	system: '[data-color-mode="auto"][data-dark-theme^="dark"]',
 	replacements: [
 		repositorySideTreeImplementation,
 		commitTreeImplementation,
