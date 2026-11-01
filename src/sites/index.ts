@@ -19,6 +19,15 @@ export type ReplacementSelectorSet = {
 	isSubmodule: FnWithContext<boolean>;
 	isCollapsable: FnWithContext<boolean>;
 	getFilename?: FnWithContext<string>;
+	/**
+	 * Setup a manual row observer and call {@link replace} when you
+	 * to replace the icon properly in the row.
+	 *
+	 * If not given, the classic behavior will be used; should work for
+	 * most cases, use this only for very specific behaviors (e.g. DOM nodes
+	 * are re-used for a new row).
+	 */
+	setupObserver?: (row: HTMLElement, replace: () => Promise<void>) => Promise<void>;
 	styles?: string;
 };
 

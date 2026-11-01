@@ -39,8 +39,16 @@ function runReplacements(
 	for (const replacement of replacements) {
 		observe(replacement.row, {
 			async add(rowEl: HTMLElement) {
-				await replaceIconInRow(rowEl, replacement);
-			},
+				if (replacement.setupObserver) {
+					replacement.setupObserver(
+						rowEl,
+						() => replaceIconInRow(rowEl, replacement)
+					)
+				}
+				else {
+					await replaceIconInRow(rowEl, replacement);
+				}
+			}
 		});
 	}
 
