@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.1](https://github.com/catppuccin/web-file-explorer-icons/compare/v1.7.0...v1.7.1) (2026-11-03)
+
+
+### Bug Fixes
+
+* **sites/gitlab:** fix repository side tree icons ([#286](https://github.com/catppuccin/web-file-explorer-icons/issues/286)) ([745c615](https://github.com/catppuccin/web-file-explorer-icons/commit/745c61521c59e3a5c5fb9948d2815fdc94c94bdf))
+
 ## [1.7.0](https://github.com/catppuccin/web-file-explorer-icons/compare/v1.6.1...v1.7.0) (2026-11-01)
 
 
