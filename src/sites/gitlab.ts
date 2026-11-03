@@ -1,5 +1,12 @@
 import type { ReplacementSelectorSet, Site } from '.';
 
+/**
+ * Filenames often have [LEFT-TO-RIGHT MARKs](https://en.wikipedia.org/wiki/Left-to-right_mark) within the text content, e.g. `go.\u200Emod\u200E`.
+ */
+function cleanFilenameContents(filename: string) {
+	return filename.replace(/\u200E/g, '').trim();
+}
+
 const repositoryMainImplementation: ReplacementSelectorSet = {
 	row: '.tree-table .tree-item',
 	filename: '.tree-item-file-name .tree-item-link',
@@ -12,11 +19,13 @@ const repositoryMainImplementation: ReplacementSelectorSet = {
 
 const repositorySideTreeImplementation: ReplacementSelectorSet = {
 	row: '.file-tree-browser .repository-tree-list .file-row',
-	filename: '.file-row-name span:last-of-type',
+	filename: '.file-row-name',
 	icon: 'svg',
 	isDirectory: (rowEl, _fileNameEl, _iconEl) =>
 		rowEl.classList.contains('folder'),
 	isSubmodule: (_rowEl, _fileNameEl, _iconEl) => false, // TODO: determine submodule flag
+	getFilename: (_rowEl, fileNameEl, _iconEl) =>
+		cleanFilenameContents(fileNameEl.textContent),
 	open: '.is-open',
 };
 
@@ -47,9 +56,8 @@ const mergeRequestsTreeImplementation: ReplacementSelectorSet = {
 	isSubmodule: (_rowEl, _fileNameEl, iconEl) =>
 		iconEl.firstElementChild.getAttribute('href').endsWith('#folder-git'),
 	open: '.is-open',
-	// Names have [LEFT-TO-RIGHT MARKs](https://en.wikipedia.org/wiki/Left-to-right_mark) around the extension, e.g. `go.\u200Emod\u200E`.
 	getFilename: (_rowEl, fileNameEl, _iconEl) =>
-		fileNameEl.textContent.replace(/\u200E/g, '').trim(),
+		cleanFilenameContents(fileNameEl.textContent),
 };
 
 export const gitlab: Site = {
