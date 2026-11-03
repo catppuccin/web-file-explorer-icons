@@ -15,6 +15,14 @@ export default defineConfig({
 		const defaults = {
 			name: 'Catppuccin for Web File Explorer Icons',
 			permissions: ['storage', 'contextMenus', 'activeTab'],
+			browser_specific_settings: {
+				gecko: {
+					id: '{bbb880ce-43c9-47ae-b746-c3e0096c5b76}',
+					data_collection_permissions: {
+						required: ['none'],
+					},
+				},
+			},
 		};
 
 		const mv3 = {
