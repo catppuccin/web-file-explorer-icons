@@ -7,3 +7,5 @@ src/icons.json
 
 .DS_Store
 Thumbs.db
+
+.env.submit
